@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "377af4b8-effd-43b8-9d8e-e4cd4a4f00d2",
+		"name": "PROJECT - INTEGRATOR",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21171850"
+	},
+	"item": [
+		{
+			"name": "Create user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/8080/v1/user/new-user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"8080",
+						"v1",
+						"user",
+						"new-user"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
