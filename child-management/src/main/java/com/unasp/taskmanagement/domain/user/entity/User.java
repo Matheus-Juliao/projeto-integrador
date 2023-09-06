@@ -31,8 +31,8 @@ public class User implements Serializable {
   @Column(nullable = false, length = 20)
   private String password;
 
-  @Column(name = "token_email", length = 100)
-  private String tokenEmail;
+//  @Column(name = "token_email", length = 100)
+//  private String tokenEmail;
 
   private boolean active;
 

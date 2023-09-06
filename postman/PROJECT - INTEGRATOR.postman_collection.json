@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "",
+					"raw": "{\r\n    \"name\": \"Matheus José Julião\",\r\n    \"email\": \"matheusjose@gmail.com\",\r\n    \"password\": \"12345\",\r\n    \"readTerms\": true\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -21,15 +21,16 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost/8080/v1/user/new-user",
+					"raw": "http://localhost:8080/v1/user/sponsor/new-user",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
+					"port": "8080",
 					"path": [
-						"8080",
 						"v1",
 						"user",
+						"sponsor",
 						"new-user"
 					]
 				}

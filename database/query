@@ -1,4 +1,4 @@
-CREATE TABLE "user" (
+CREATE TABLE users (
     id SERIAL PRIMARY KEY UNIQUE,
     external_id VARCHAR(45) NOT NULL UNIQUE,
     name VARCHAR(100) NOT NULL,
@@ -6,6 +6,6 @@ CREATE TABLE "user" (
     password VARCHAR(20) NOT NULL,
     active BOOLEAN NOT NULL,
     read_terms BOOLEAN NOT NULL,
-    created_date DATE NOT NULL,
-    updated_date DATE
+    created_date TIMESTAMP NOT NULL,
+    updated_date TIMESTAMP
 );
