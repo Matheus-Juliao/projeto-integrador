@@ -1,0 +1,13 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    ## Postgres
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:5432/task-management
+    username: postgres
+    password: postgre
+
+#api:
+#  security:
+#    token:
+#      secret: ${JWT_SECRET:my-secret-key}
