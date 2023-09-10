@@ -86,4 +86,6 @@ public class User implements Serializable, UserDetails {
   public boolean isEnabled() {
     return true;
   }
+
+  public String getExternalId() { return externalId; }
 }

@@ -1,8 +1,11 @@
 package com.unasp.taskmanagement.domain.user.api.v1.request;
 
+import com.unasp.taskmanagement.domain.authentication.service.AuthenticationService;
+import com.unasp.taskmanagement.domain.authentication.service.impl.AuthenticationServiceImpl;
 import com.unasp.taskmanagement.domain.user.entity.User;
-import jakarta.validation.constraints.Email;
+import com.unasp.taskmanagement.domain.user.enums.UserRole;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -11,15 +14,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserChildRequest {
-  @NotEmpty(message = "userCreator is mandatory field")
-  @Size(max = 45, message = "userCreator field has a maximum size of 45 characters")
-  private String userCreator;
+
+  @Autowired
+  AuthenticationService authenticationService;
 
   @NotEmpty(message = "name is mandatory field")
   @Size(max = 100, message = "name field has a maximum size of 100 characters")
@@ -33,16 +40,21 @@ public class UserChildRequest {
   @Size(min = 5, max = 20, message = "password field has size minimum of 5 and a maximum of 20 characters")
   private String password;
 
-  @NotEmpty(message = "age is mandatory field")
+  @NotNull(message = "age is mandatory field")
   private int age;
 
-  public User converter() {
+  @NotNull(message = "role is mandatory field")
+  private UserRole role;
+
+  public User converter(String userCreator) {
     return User.builder()
         .externalId(UUID.randomUUID().toString())
         .name(name)
         .login(nickname)
-        .password(password)
+        .password(new BCryptPasswordEncoder().encode(password))
         .age(age)
+        .userCreator(userCreator)
+        .role(role)
         .active(true)
         .createdDate(LocalDateTime.now(ZoneId.of("UTC")))
         .build();

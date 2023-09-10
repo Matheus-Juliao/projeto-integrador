@@ -9,6 +9,8 @@ import com.unasp.taskmanagement.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,5 +36,11 @@ public class AuthenticationServiceImpl implements AuthenticationService, UserDet
     var token = tokenService.generateToken((User) auth.getPrincipal());
 
     return AuthenticationResponse.builder().build().converter(token);
+  }
+
+  @Override
+  public User getAuthenticatedUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    return (User) authentication.getPrincipal();
   }
 }

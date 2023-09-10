@@ -18,7 +18,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class SecurityFilter extends OncePerRequestFilter {
   @Autowired
   TokenService tokenService;
-
   @Autowired
   UserRepository userRepository;
 

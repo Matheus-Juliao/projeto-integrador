@@ -7,7 +7,7 @@ CREATE TABLE users (
     age INTEGER,
 	user_creator VARCHAR(45),
     active BOOLEAN NOT NULL,
-	role VARCHAR(20) NOT NULL,
+	role VARCHAR(255) NOT NULL,
     read_terms BOOLEAN,
     created_date TIMESTAMP NOT NULL,
     updated_date TIMESTAMP
