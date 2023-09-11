@@ -30,6 +30,7 @@ public class SecurityConfigurations {
             .requestMatchers(HttpMethod.POST, "/v1/user/sponsor/new-user").permitAll()
             .requestMatchers(HttpMethod.POST, "/v1/auth/login").permitAll()
             .requestMatchers(HttpMethod.POST, "/v1/user/child/new-user").hasRole("SPONSOR")
+            .requestMatchers(HttpMethod.PUT, "/update-child/{externalId}").hasRole("SPONSOR")
             .anyRequest().authenticated()
         )
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

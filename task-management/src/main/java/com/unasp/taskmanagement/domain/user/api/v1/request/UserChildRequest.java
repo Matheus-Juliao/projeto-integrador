@@ -35,9 +35,6 @@ public class UserChildRequest {
   @NotNull(message = "age is mandatory field")
   private int age;
 
-  @NotNull(message = "role is mandatory field")
-  private UserRole role;
-
   public User converter(String userCreator) {
     return User.builder()
         .externalId(UUID.randomUUID().toString())
@@ -46,7 +43,7 @@ public class UserChildRequest {
         .password(new BCryptPasswordEncoder().encode(password))
         .age(age)
         .userCreator(userCreator)
-        .role(role)
+        .role(UserRole.CHILD)
         .active(true)
         .createdDate(LocalDateTime.now(ZoneId.of("UTC")))
         .build();

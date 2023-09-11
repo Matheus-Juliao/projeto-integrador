@@ -34,9 +34,6 @@ public class UserSponsorRequest {
     @Size(min = 5, max = 20, message = "password field has size minimum of 5 and a maximum of 20 characters")
     private String password;
 
-    @NotNull(message = "role is mandatory field")
-    private UserRole role;
-
     @NotNull(message = "readTerms is mandatory field")
     private Boolean readTerms;
 
@@ -46,7 +43,7 @@ public class UserSponsorRequest {
             .name(name)
             .login(email)
             .password(new BCryptPasswordEncoder().encode(password))
-            .role(role)
+            .role(UserRole.SPONSOR)
             .readTerms(readTerms)
             .active(true)
             .createdDate(LocalDateTime.now(ZoneId.of("UTC")))

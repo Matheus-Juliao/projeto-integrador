@@ -33,10 +33,10 @@ public class UserController {
   })
   public ResponseEntity<Messages> createSponsor (@RequestBody @Valid UserSponsorRequest userSponsorRequest) {
     log.info("Start user Sponsor registration {}", userSponsorRequest.getEmail());
-    Messages user = userService.createSponsor(userSponsorRequest);
+    Messages message = userService.createSponsor(userSponsorRequest);
     log.info("Finalize user Sponsor registration {}", userSponsorRequest.getEmail());
 
-    return  ResponseEntity.status(HttpStatus.CREATED).body(user);
+    return  ResponseEntity.status(HttpStatus.CREATED).body(message);
   }
 
   @PostMapping("/child/new-user")
@@ -67,5 +67,20 @@ public class UserController {
     log.info("Finalize of list search {}", externalId);
 
     return ResponseEntity.status(HttpStatus.OK).body(list);
+  }
+
+  @PutMapping("/update-child/{externalId}")
+  @Operation(summary = "Update child",  description = "Api for update a child on the platform")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Success", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = UserChildResponse.class)) }),
+      @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true))),
+      @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
+  })
+  public ResponseEntity<UserChildResponse> updateChild(@PathVariable String externalId, @RequestBody @Valid UserChildRequest userChildRequest) {
+    log.info("Start update child {}", externalId, userChildRequest.getNickname());
+    UserChildResponse user = userService.updateChild(externalId, userChildRequest);
+    log.info("Finalize update child {}", externalId, userChildRequest.getNickname());
+
+    return ResponseEntity.status(HttpStatus.OK).body(user);
   }
 }

@@ -9,5 +9,6 @@ import java.util.List;
 public interface UserService {
   Messages createSponsor(UserSponsorRequest userSponsorRequest);
   UserChildResponse createChild(UserChildRequest userChildRequest);
-  List<UserChildResponse> listChild (String externalId);
+  List<UserChildResponse> listChild(String externalId);
+  UserChildResponse updateChild(String externalId, UserChildRequest userChildRequest);
 }
