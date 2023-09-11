@@ -7,13 +7,13 @@
 	},
 	"item": [
 		{
-			"name": "Create user",
+			"name": "Create user sponsor",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Matheus José Julião\",\r\n    \"email\": \"matheusjose@gmail.com\",\r\n    \"password\": \"12345\",\r\n    \"readTerms\": true\r\n}",
+					"raw": "{\r\n    \"name\": \"Matheus José Julião\",\r\n    \"email\": \"matheusjosejuliao@gmail.com\",\r\n    \"password\": \"12345\",\r\n    \"readTerms\": true\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -32,6 +32,197 @@
 						"user",
 						"sponsor",
 						"new-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create user child",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Samuel Rocha Julião\",\r\n    \"nickname\": \"samuka\",\r\n    \"password\": \"12345\",\r\n    \"age\": 7\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/user/child/new-user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"user",
+						"child",
+						"new-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login sponsor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if(pm.response.code === 200) {\r",
+							"    pm.environment.set(\"Authorization\", pm.response.json().token)\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\": \"matheusjosejuliao@gmail.com\",\r\n    \"password\": \"12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login child",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if(pm.response.code === 200) {\r",
+							"    pm.environment.set(\"Authorization\", pm.response.json().token)\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\": \"samuka\",\r\n    \"password\": \"12345\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List child",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/user/list-child/cd516fea-8da9-42ad-b520-e5464c7e7d4f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"user",
+						"list-child",
+						"cd516fea-8da9-42ad-b520-e5464c7e7d4f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update child",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Samuel Rocha Julião\",\r\n    \"nickname\": \"samuca\",\r\n    \"password\": \"12345\",\r\n    \"age\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/user/update-child/6160a4a8-6981-4c0d-b05d-1249bf98840b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"user",
+						"update-child",
+						"6160a4a8-6981-4c0d-b05d-1249bf98840b"
 					]
 				}
 			},
