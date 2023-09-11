@@ -1,7 +1,5 @@
 package com.unasp.taskmanagement.domain.user.api.v1.request;
 
-import com.unasp.taskmanagement.domain.authentication.service.AuthenticationService;
-import com.unasp.taskmanagement.domain.authentication.service.impl.AuthenticationServiceImpl;
 import com.unasp.taskmanagement.domain.user.entity.User;
 import com.unasp.taskmanagement.domain.user.enums.UserRole;
 import jakarta.validation.constraints.NotEmpty;
@@ -14,9 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Builder
@@ -24,9 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserChildRequest {
-
-  @Autowired
-  AuthenticationService authenticationService;
 
   @NotEmpty(message = "name is mandatory field")
   @Size(max = 100, message = "name field has a maximum size of 100 characters")

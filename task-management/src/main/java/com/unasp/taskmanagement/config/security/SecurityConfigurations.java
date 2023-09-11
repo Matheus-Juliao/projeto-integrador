@@ -26,6 +26,7 @@ public class SecurityConfigurations {
         .csrf(csrf -> csrf.disable())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers("/**.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/v1/user/sponsor/new-user").permitAll()
             .requestMatchers(HttpMethod.POST, "/v1/auth/login").permitAll()
             .requestMatchers(HttpMethod.POST, "/v1/user/child/new-user").hasRole("SPONSOR")
