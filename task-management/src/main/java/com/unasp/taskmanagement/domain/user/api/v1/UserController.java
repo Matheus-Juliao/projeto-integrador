@@ -2,6 +2,7 @@ package com.unasp.taskmanagement.domain.user.api.v1;
 
 import com.unasp.taskmanagement.config.messages.Messages;
 import com.unasp.taskmanagement.domain.user.api.v1.request.UserChildRequest;
+import com.unasp.taskmanagement.domain.user.api.v1.request.UserChildUpdateRequest;
 import com.unasp.taskmanagement.domain.user.api.v1.request.UserSponsorRequest;
 import com.unasp.taskmanagement.domain.user.api.v1.response.UserChildResponse;
 import com.unasp.taskmanagement.domain.user.service.UserService;
@@ -72,15 +73,30 @@ public class UserController {
   @PutMapping("/update-child/{externalId}")
   @Operation(summary = "Update child",  description = "Api for update a child on the platform")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Success", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = UserChildResponse.class)) }),
+      @ApiResponse(responseCode = "200", description = "Success", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = UserChildUpdateRequest.class)) }),
       @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true))),
-      @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
+      @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
   })
-  public ResponseEntity<UserChildResponse> updateChild(@PathVariable String externalId, @RequestBody @Valid UserChildRequest userChildRequest) {
-    log.info("Start update child {}", externalId, userChildRequest.getNickname());
-    UserChildResponse user = userService.updateChild(externalId, userChildRequest);
-    log.info("Finalize update child {}", externalId, userChildRequest.getNickname());
+  public ResponseEntity<UserChildResponse> updateChild(@PathVariable String externalId, @RequestBody @Valid UserChildUpdateRequest userChildUpdateRequest) {
+    log.info("Start update child {}", externalId, userChildUpdateRequest.getNickname());
+    UserChildResponse user = userService.updateChild(externalId, userChildUpdateRequest);
+    log.info("Finalize update child {}", externalId, userChildUpdateRequest.getNickname());
 
     return ResponseEntity.status(HttpStatus.OK).body(user);
+  }
+
+  @DeleteMapping("delete-child/{externalId}")
+  @Operation(summary = "Delete a child", description = "API to delete a child on the platform")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = Messages.class))),
+      @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true))),
+      @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+  })
+  public ResponseEntity<Messages> deleteChild(@PathVariable String externalId) {
+    log.info("Start delete child {}", externalId);
+    Messages message = userService.deleteChild(externalId);
+    log.info("Finalize update child {}", externalId);
+
+    return ResponseEntity.status(HttpStatus.OK).body(message);
   }
 }

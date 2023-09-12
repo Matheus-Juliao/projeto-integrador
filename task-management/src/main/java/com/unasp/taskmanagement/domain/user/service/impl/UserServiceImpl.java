@@ -4,6 +4,7 @@ import com.unasp.taskmanagement.config.messages.Messages;
 import com.unasp.taskmanagement.config.component.MessageProperty;
 import com.unasp.taskmanagement.domain.authentication.service.AuthenticationService;
 import com.unasp.taskmanagement.domain.user.api.v1.request.UserChildRequest;
+import com.unasp.taskmanagement.domain.user.api.v1.request.UserChildUpdateRequest;
 import com.unasp.taskmanagement.domain.user.api.v1.request.UserSponsorRequest;
 import com.unasp.taskmanagement.domain.user.api.v1.response.UserChildResponse;
 import com.unasp.taskmanagement.domain.user.entity.User;
@@ -16,6 +17,7 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,7 +31,6 @@ public class UserServiceImpl implements UserService {
   MessageProperty messageProperty;
   @Autowired
   AuthenticationService authenticationService;
-
 
   @Transactional
   @Override
@@ -71,30 +72,45 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public UserChildResponse updateChild(String externalId, UserChildRequest userChildRequest) {
+  public UserChildResponse updateChild(String externalId, UserChildUpdateRequest userChildUpdateRequest) {
     Optional<User> userOptional = userRepository.findByExternalId(externalId);
     if(userOptional.isEmpty()) {
       throw new BusinessException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("user")));
     }
 
-    if(!userOptional.get().getLogin().equals(userChildRequest.getNickname())) {
-      if(userRepository.findByLogin(userChildRequest.getNickname()).isPresent()) {
+    if(userChildUpdateRequest.getNickname() != null && !userOptional.get().getLogin().equals(userChildUpdateRequest.getNickname())) {
+      if(userRepository.findByLogin(userChildUpdateRequest.getNickname()).isPresent()) {
         throw new BusinessException(messageProperty.getProperty("error.already.nickname", messageProperty.getProperty("user")));
       }
     }
 
-    if(!authenticationService.getAuthenticatedUser().equals(userOptional.get().getUserCreator())) {
-      throw new BusinessException(messageProperty.getProperty("error.internalServerError"));
+    if(!authenticationService.getAuthenticatedUser().getExternalId().equals(userOptional.get().getUserCreator())) {
+      throw new BusinessException(messageProperty.getProperty("error.invalid.operation"));
     }
 
     User user = userOptional.get();
-    user.setName(userChildRequest.getName());
-    user.setLogin(userChildRequest.getNickname());
-    user.setPassword(new BCryptPasswordEncoder().encode(userChildRequest.getPassword()));
-    user.setAge(userChildRequest.getAge());
+    userChildUpdateRequest.setPassword(userChildUpdateRequest.getPassword() == null ? user.getPassword() : new BCryptPasswordEncoder().encode(userChildUpdateRequest.getPassword()));
+    if(userChildUpdateRequest.getAge() == 0) { userChildUpdateRequest.setAge(user.getAge()); }
+    BeanUtils.copyProperties(userChildUpdateRequest, user);
     user.setUpdatedDate(LocalDateTime.now(ZoneId.of("UTC")));
     userRepository.save(user);
 
     return UserChildResponse.builder().build().converter(user);
+  }
+
+  @Override
+  public Messages deleteChild(String externalId) {
+    Optional<User> userOptional = userRepository.findByExternalId(externalId);
+    if(userOptional.isEmpty()) {
+      throw new BusinessException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("user")));
+    }
+
+    if(!authenticationService.getAuthenticatedUser().getExternalId().equals(userOptional.get().getUserCreator())) {
+      throw new BusinessException(messageProperty.getProperty("error.invalid.operation"));
+    }
+
+    userRepository.delete(userOptional.get());
+
+    return Messages.builder().build().converter(messageProperty.getProperty("success.delete", messageProperty.getProperty("user")), HttpStatus.OK.value());
   }
 }
