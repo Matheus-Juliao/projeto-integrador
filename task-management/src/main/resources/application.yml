@@ -5,9 +5,9 @@ spring:
     ## Postgres
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:5432/task-management
     username: postgres
-    password: postgre
+    password: postgres
 
-#api:
-#  security:
-#    token:
-#      secret: ${JWT_SECRET:my-secret-key}
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:my-secret-key}
