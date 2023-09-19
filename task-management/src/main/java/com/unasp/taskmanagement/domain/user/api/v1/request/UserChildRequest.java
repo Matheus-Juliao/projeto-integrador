@@ -19,7 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserChildRequest {
-
   @NotEmpty(message = "name is mandatory field")
   @Size(max = 100, message = "name field has a maximum size of 100 characters")
   private String name;
@@ -33,7 +32,7 @@ public class UserChildRequest {
   private String password;
 
   @NotNull(message = "age is mandatory field")
-  private int age;
+  private Integer age;
 
   public User converter(String userCreator) {
     return User.builder()

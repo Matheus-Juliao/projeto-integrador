@@ -1,6 +1,5 @@
 package com.unasp.taskmanagement.config.component;
 
-
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Properties;

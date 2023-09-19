@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/auth")
 @Slf4j
+@SuppressWarnings("unused")
 public class AuthenticationController {
   @Autowired
   AuthenticationService authenticationService;
-
   @Autowired
   private AuthenticationManager authenticationManager;
 

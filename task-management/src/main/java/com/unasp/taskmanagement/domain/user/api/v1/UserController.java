@@ -1,6 +1,7 @@
 package com.unasp.taskmanagement.domain.user.api.v1;
 
 import com.unasp.taskmanagement.config.messages.Messages;
+import com.unasp.taskmanagement.domain.authentication.service.AuthenticationService;
 import com.unasp.taskmanagement.domain.user.api.v1.request.UserChildRequest;
 import com.unasp.taskmanagement.domain.user.api.v1.request.UserChildUpdateRequest;
 import com.unasp.taskmanagement.domain.user.api.v1.request.UserSponsorRequest;
@@ -22,9 +23,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/v1/user")
 @Slf4j
+@CrossOrigin(origins = "http://localhost:5173")
+@SuppressWarnings("unused")
 public class UserController {
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private AuthenticationService authenticationService;
 
   @PostMapping("/sponsor/new-user")
   @Operation(summary = "Register sponsor", description = "Api for register a new sponsor on the platform")
@@ -55,14 +61,15 @@ public class UserController {
     return  ResponseEntity.status(HttpStatus.CREATED).body(user);
   }
 
-  @GetMapping("/list-child/{externalId}")
+  @GetMapping("/list-child")
   @Operation(summary = "Returns all child of Sponsor", description = "API to list all child of Sponsor and their information on the platform")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Ok", content =  { @Content(mediaType = "application/json", schema = @Schema(implementation = UserChildResponse.class)) }),
       @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true))),
       @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
   })
-  public ResponseEntity<List<UserChildResponse>> listChild(@PathVariable String externalId) {
+  public ResponseEntity<List<UserChildResponse>> listChild() {
+    String externalId = authenticationService.getAuthenticatedUser().getExternalId();
     log.info("Start of list search {}", externalId);
     List<UserChildResponse> list = userService.listChild(externalId);
     log.info("Finalize of list search {}", externalId);
@@ -78,9 +85,9 @@ public class UserController {
       @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
   })
   public ResponseEntity<UserChildResponse> updateChild(@PathVariable String externalId, @RequestBody @Valid UserChildUpdateRequest userChildUpdateRequest) {
-    log.info("Start update child {}", externalId, userChildUpdateRequest.getNickname());
+    log.info("Start update child {}", externalId);
     UserChildResponse user = userService.updateChild(externalId, userChildUpdateRequest);
-    log.info("Finalize update child {}", externalId, userChildUpdateRequest.getNickname());
+    log.info("Finalize update child {}", externalId);
 
     return ResponseEntity.status(HttpStatus.OK).body(user);
   }
@@ -95,7 +102,7 @@ public class UserController {
   public ResponseEntity<Messages> deleteChild(@PathVariable String externalId) {
     log.info("Start delete child {}", externalId);
     Messages message = userService.deleteChild(externalId);
-    log.info("Finalize update child {}", externalId);
+    log.info("Finalize delete child {}", externalId);
 
     return ResponseEntity.status(HttpStatus.OK).body(message);
   }

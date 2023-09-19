@@ -3,6 +3,7 @@ package com.unasp.taskmanagement.domain.user.service.impl;
 import com.unasp.taskmanagement.config.messages.Messages;
 import com.unasp.taskmanagement.config.component.MessageProperty;
 import com.unasp.taskmanagement.domain.authentication.service.AuthenticationService;
+import com.unasp.taskmanagement.domain.task.repository.TaskRepository;
 import com.unasp.taskmanagement.domain.user.api.v1.request.UserChildRequest;
 import com.unasp.taskmanagement.domain.user.api.v1.request.UserChildUpdateRequest;
 import com.unasp.taskmanagement.domain.user.api.v1.request.UserSponsorRequest;
@@ -11,6 +12,7 @@ import com.unasp.taskmanagement.domain.user.entity.User;
 import com.unasp.taskmanagement.domain.user.repository.UserRepository;
 import com.unasp.taskmanagement.domain.user.service.UserService;
 import com.unasp.taskmanagement.exception.BusinessException;
+import com.unasp.taskmanagement.exception.NotFoundException;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -24,6 +26,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@SuppressWarnings("unused")
 public class UserServiceImpl implements UserService {
   @Autowired
   UserRepository userRepository;
@@ -31,6 +34,8 @@ public class UserServiceImpl implements UserService {
   MessageProperty messageProperty;
   @Autowired
   AuthenticationService authenticationService;
+  @Autowired
+  TaskRepository taskRepository;
 
   @Transactional
   @Override
@@ -61,7 +66,6 @@ public class UserServiceImpl implements UserService {
      return userRepository.findByUserCreator(externalId)
          .stream().map(user -> UserChildResponse.builder()
              .externalId(user.getExternalId())
-             .userCreator(user.getUserCreator())
              .name(user.getName())
              .role(user.getRole())
              .nickname(user.getLogin())
@@ -75,7 +79,7 @@ public class UserServiceImpl implements UserService {
   public UserChildResponse updateChild(String externalId, UserChildUpdateRequest userChildUpdateRequest) {
     Optional<User> userOptional = userRepository.findByExternalId(externalId);
     if(userOptional.isEmpty()) {
-      throw new BusinessException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("user")));
+      throw new NotFoundException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("user")));
     }
 
     if(userChildUpdateRequest.getNickname() != null && !userOptional.get().getLogin().equals(userChildUpdateRequest.getNickname())) {
@@ -83,14 +87,8 @@ public class UserServiceImpl implements UserService {
         throw new BusinessException(messageProperty.getProperty("error.already.nickname", messageProperty.getProperty("user")));
       }
     }
-
-    if(!authenticationService.getAuthenticatedUser().getExternalId().equals(userOptional.get().getUserCreator())) {
-      throw new BusinessException(messageProperty.getProperty("error.invalid.operation"));
-    }
-
     User user = userOptional.get();
     userChildUpdateRequest.setPassword(userChildUpdateRequest.getPassword() == null ? user.getPassword() : new BCryptPasswordEncoder().encode(userChildUpdateRequest.getPassword()));
-    if(userChildUpdateRequest.getAge() == 0) { userChildUpdateRequest.setAge(user.getAge()); }
     BeanUtils.copyProperties(userChildUpdateRequest, user);
     user.setUpdatedDate(LocalDateTime.now(ZoneId.of("UTC")));
     userRepository.save(user);
@@ -98,17 +96,14 @@ public class UserServiceImpl implements UserService {
     return UserChildResponse.builder().build().converter(user);
   }
 
+  @Transactional
   @Override
   public Messages deleteChild(String externalId) {
     Optional<User> userOptional = userRepository.findByExternalId(externalId);
     if(userOptional.isEmpty()) {
-      throw new BusinessException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("user")));
+      throw new NotFoundException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("user")));
     }
-
-    if(!authenticationService.getAuthenticatedUser().getExternalId().equals(userOptional.get().getUserCreator())) {
-      throw new BusinessException(messageProperty.getProperty("error.invalid.operation"));
-    }
-
+    taskRepository.deleteExternalIdUserChild(externalId);
     userRepository.delete(userOptional.get());
 
     return Messages.builder().build().converter(messageProperty.getProperty("success.delete", messageProperty.getProperty("user")), HttpStatus.OK.value());

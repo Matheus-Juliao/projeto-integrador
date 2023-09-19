@@ -1,12 +1,17 @@
 package com.unasp.taskmanagement.config.security;
 
+import com.unasp.taskmanagement.config.component.MessageProperty;
 import com.unasp.taskmanagement.config.service.TokenService;
+import com.unasp.taskmanagement.domain.user.entity.User;
 import com.unasp.taskmanagement.domain.user.repository.UserRepository;
+import com.unasp.taskmanagement.exception.NotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,12 +26,19 @@ public class SecurityFilter extends OncePerRequestFilter {
   @Autowired
   UserRepository userRepository;
 
+  @Autowired
+  MessageProperty messageProperty;
+
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+  protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
     var token = recoverToken(request);
     if(token != null) {
       var login = tokenService.validateToken(token);
-      UserDetails user = userRepository.findByLogin(login).get();
+      Optional<User> userOptional = userRepository.findByLogin(login);
+      if(userOptional.isEmpty()) {
+        throw new NotFoundException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("user")));
+      }
+      UserDetails user = userOptional.get();
 
       var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(authentication);

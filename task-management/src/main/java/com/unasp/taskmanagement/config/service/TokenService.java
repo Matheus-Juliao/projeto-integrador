@@ -16,13 +16,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@SuppressWarnings("unused")
 public class TokenService {
   @Value("${api.security.token.secret}")
   private String secret;
   public String generateToken(User user) {
     try {
       Algorithm algorithm = Algorithm.HMAC256(secret);
-      String token = JWT.create()
+      return JWT.create()
           .withIssuer("task-management")
           .withSubject(user.getLogin())
           .withClaim("externalId", user.getExternalId())
@@ -30,8 +31,6 @@ public class TokenService {
           .withArrayClaim("role", getRoles(user).toArray(new String[0]))
           .withExpiresAt(genExpirationDate())
           .sign(algorithm);
-
-      return token;
     } catch (JWTCreationException exception) {
       throw new RuntimeException("Erro while generating token", exception);
     }

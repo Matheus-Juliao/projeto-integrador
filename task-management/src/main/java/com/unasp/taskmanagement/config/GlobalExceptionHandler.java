@@ -4,6 +4,7 @@ import com.unasp.taskmanagement.config.component.MessageProperty;
 import com.unasp.taskmanagement.config.dto.ErrorValidationDTO;
 import com.unasp.taskmanagement.config.messages.Messages;
 import com.unasp.taskmanagement.exception.BusinessException;
+import com.unasp.taskmanagement.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @Slf4j
+@SuppressWarnings("unused")
 public class GlobalExceptionHandler {
   @Autowired
   private MessageProperty messageProperty;
@@ -46,6 +47,15 @@ public class GlobalExceptionHandler {
         .code(HttpStatus.BAD_REQUEST.value())
         .message(e.getMessage())
         .build(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(NotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public ResponseEntity<Object> handleNotFound(RuntimeException e) {
+    return new ResponseEntity<>(Messages.builder()
+        .code(HttpStatus.NOT_FOUND.value())
+        .message(e.getMessage())
+        .build(), HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler({ BadCredentialsException.class,

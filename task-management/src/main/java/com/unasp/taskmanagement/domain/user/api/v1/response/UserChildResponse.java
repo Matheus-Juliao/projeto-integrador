@@ -8,7 +8,6 @@ import lombok.Data;
 @Builder
 @Data
 public class UserChildResponse {
-  private String userCreator;
   private String externalId;
   private String name;
   private String nickname;
@@ -18,11 +17,10 @@ public class UserChildResponse {
   public UserChildResponse converter(User user) {
     return UserChildResponse.builder()
         .externalId(user.getExternalId())
-        .userCreator(user.getUserCreator())
         .name(user.getName())
-        .role(user.getRole())
         .nickname(user.getLogin())
         .age(user.getAge())
+        .role(user.getRole())
         .build();
   }
 }

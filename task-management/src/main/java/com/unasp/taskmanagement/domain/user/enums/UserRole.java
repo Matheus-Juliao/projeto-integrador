@@ -9,7 +9,7 @@ public enum UserRole {
   SPONSOR("SPONSOR"),
   CHILD("CHILD");
 
-  private String role;
+  private final String role;
 
   UserRole(String role) {
     this.role = role;

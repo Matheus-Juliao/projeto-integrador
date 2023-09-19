@@ -31,9 +31,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements Serializable, UserDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "user_id")
   private Long id;
-  @Column(name = "external_id")
+  @Column(name = "external_id_user")
   private String externalId;
+  @Column(name = "user_name")
   private String name;
   private String login;
   private String password;

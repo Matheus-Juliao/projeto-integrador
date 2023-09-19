@@ -5,7 +5,14 @@ spring:
     ## Postgres
     url: jdbc:postgresql://${DATABASE_HOST:localhost}:5432/task-management
     username: postgres
-    password: postgres
+    password: postgre
+    ## default connection pool
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+      poolName: SpringBootJPAHikariCP
+      maxLifetime: 2000000
+    continue-on-error: true
 
 api:
   security:
