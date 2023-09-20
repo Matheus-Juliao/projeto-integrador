@@ -38,46 +38,6 @@
 			"response": []
 		},
 		{
-			"name": "Create user child",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "{{Authorization}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Samuel Rocha Julião\",\r\n    \"nickname\": \"samuka\",\r\n    \"password\": \"12345\",\r\n    \"age\": 7\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/v1/user/child/new-user",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"v1",
-						"user",
-						"child",
-						"new-user"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Login sponsor",
 			"event": [
 				{
@@ -121,6 +81,46 @@
 			"response": []
 		},
 		{
+			"name": "Create user child",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Isabela Rocha Julião\",\r\n    \"nickname\": \"isa_linda\",\r\n    \"password\": \"12345\",\r\n    \"age\": 7\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/user/child/new-user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"user",
+						"child",
+						"new-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Login child",
 			"event": [
 				{
@@ -140,7 +140,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"login\": \"samuka\",\r\n    \"password\": \"12345\"\r\n}",
+					"raw": "{\r\n    \"login\": \"samuca\",\r\n    \"password\": \"12345\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -175,7 +175,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/v1/user/list-child/cd516fea-8da9-42ad-b520-e5464c7e7d4f",
+					"raw": "http://localhost:8080/v1/user/list-child",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -184,8 +184,7 @@
 					"path": [
 						"v1",
 						"user",
-						"list-child",
-						"cd516fea-8da9-42ad-b520-e5464c7e7d4f"
+						"list-child"
 					]
 				}
 			},
@@ -212,7 +211,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/v1/user/update-child/6160a4a8-6981-4c0d-b05d-1249bf98840b",
+					"raw": "http://localhost:8080/v1/user/update-child/839a06e4-7b12-45d1-b934-4a19fd611818",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -222,7 +221,188 @@
 						"v1",
 						"user",
 						"update-child",
-						"6160a4a8-6981-4c0d-b05d-1249bf98840b"
+						"839a06e4-7b12-45d1-b934-4a19fd611818"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete child",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/user/delete-child/f1f99228-f6eb-44e1-999b-7a01468edcc9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"user",
+						"delete-child",
+						"f1f99228-f6eb-44e1-999b-7a01468edcc9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create task",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"externalIdUserChild\": \"839a06e4-7b12-45d1-b934-4a19fd611818\",\r\n    \"name\": \"Arrumar a cama\",\r\n    \"reward\": 1.55,\r\n    \"description\": \"Arrumar logo quando acordar\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/task",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List task",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/task/839a06e4-7b12-45d1-b934-4a19fd611818",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"task",
+						"839a06e4-7b12-45d1-b934-4a19fd611818"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List  total value tasks performed",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/task/total-value-tasks-performed/839a06e4-7b12-45d1-b934-4a19fd611818",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"task",
+						"total-value-tasks-performed",
+						"839a06e4-7b12-45d1-b934-4a19fd611818"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update task",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Dar ração para o cachorro e gato\",\r\n    \"reward\": 1.00,\r\n    \"description\": \"Colocar um potinho completo as 12h e as 18h\",\r\n    \"performed\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/task/8cf1b1c8-1c0b-48d9-bed0-0a49972b3f29",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"task",
+						"8cf1b1c8-1c0b-48d9-bed0-0a49972b3f29"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete task",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/task/3f012c1f-c07e-414b-9842-3a562e9207cb",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"task",
+						"3f012c1f-c07e-414b-9842-3a562e9207cb"
 					]
 				}
 			},

@@ -1,8 +1,6 @@
 package com.unasp.taskmanagement.config.security;
 
-import java.util.Arrays;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,10 +32,10 @@ public class SecurityConfigurations {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws  Exception {
     return httpSecurity
-            .cors().configurationSource(corsConfigurationSource).and()
-            .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(authorize -> authorize
+          .cors().configurationSource(corsConfigurationSource).and()
+          .csrf(AbstractHttpConfigurer::disable)
+          .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+          .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/**.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/v1/user/sponsor/new-user").permitAll()
             .requestMatchers(HttpMethod.POST, "/v1/auth/login").permitAll()
@@ -48,9 +46,9 @@ public class SecurityConfigurations {
             .requestMatchers(HttpMethod.PUT, "/v1/task/{externalId}").hasRole("SPONSOR")
             .requestMatchers(HttpMethod.DELETE, "/v1/task/{externalId}").hasRole("SPONSOR")
             .anyRequest().authenticated()
-        )
-        .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-        .build();
+          )
+          .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+          .build();
   }
 
   @Bean
@@ -66,23 +64,6 @@ public class SecurityConfigurations {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-//    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-//    configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE"));
-//    configuration.setAllowedHeaders(Arrays.asList(
-//            "User-Agent",
-//            "Host",
-//            "Accept",
-//            "Accept-Language",
-//            "Accept-Encoding",
-//            "Connection",
-//            "Authorization",
-//            "Content-Type",
-//            "Content-Length",
-//            "Cookie",
-//            "Cache-Control",
-//            "Origin",
-//            "Referer")
-//    );
     configuration.setAllowedOrigins(List.of("*"));
     configuration.setAllowedMethods(List.of("*"));
     configuration.setAllowedHeaders(List.of("*"));
