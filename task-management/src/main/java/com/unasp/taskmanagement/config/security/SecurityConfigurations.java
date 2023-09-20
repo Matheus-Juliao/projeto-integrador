@@ -1,6 +1,8 @@
 package com.unasp.taskmanagement.config.security;
 
 import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +32,7 @@ public class SecurityConfigurations {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws  Exception {
     return httpSecurity
         .csrf(AbstractHttpConfigurer::disable)
+        .cors(AbstractHttpConfigurer::disable)
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/**.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
@@ -57,15 +60,32 @@ public class SecurityConfigurations {
       return new BCryptPasswordEncoder();
   }
 
-//  @Bean
-//  CorsConfigurationSource corsConfigurationSource() {
-//    CorsConfiguration configuration = new CorsConfiguration();
-//    configuration.setAllowedOrigins(Arrays.asList("*"));
-//    configuration.setAllowedMethods(Arrays.asList("*"));
-//    configuration.setAllowedHeaders(Arrays.asList("*"));
-//    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//    source.registerCorsConfiguration("/**", configuration);
-//    return source;
-//  }
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+//    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+//    configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE"));
+//    configuration.setAllowedHeaders(Arrays.asList(
+//            "User-Agent",
+//            "Host",
+//            "Accept",
+//            "Accept-Language",
+//            "Accept-Encoding",
+//            "Connection",
+//            "Authorization",
+//            "Content-Type",
+//            "Content-Length",
+//            "Cookie",
+//            "Cache-Control",
+//            "Origin",
+//            "Referer")
+//    );
+    configuration.setAllowedOrigins(List.of("*"));
+    configuration.setAllowedMethods(List.of("*"));
+    configuration.setAllowedHeaders(List.of("*"));
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
 
+    return source;
+  }
 }
