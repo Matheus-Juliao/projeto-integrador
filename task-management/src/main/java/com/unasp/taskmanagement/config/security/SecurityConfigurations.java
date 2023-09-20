@@ -28,13 +28,16 @@ public class SecurityConfigurations {
     @Autowired
     SecurityFilter securityFilter;
 
+    @Autowired
+    private CorsConfigurationSource corsConfigurationSource;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws  Exception {
     return httpSecurity
-        .csrf(AbstractHttpConfigurer::disable)
-        .cors(AbstractHttpConfigurer::disable)
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(authorize -> authorize
+            .cors().configurationSource(corsConfigurationSource).and()
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/**.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
             .requestMatchers(HttpMethod.POST, "/v1/user/sponsor/new-user").permitAll()
             .requestMatchers(HttpMethod.POST, "/v1/auth/login").permitAll()
@@ -83,6 +86,7 @@ public class SecurityConfigurations {
     configuration.setAllowedOrigins(List.of("*"));
     configuration.setAllowedMethods(List.of("*"));
     configuration.setAllowedHeaders(List.of("*"));
+    configuration.setAllowCredentials(true);
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
 
