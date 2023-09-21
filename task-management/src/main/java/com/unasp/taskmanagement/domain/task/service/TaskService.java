@@ -1,6 +1,7 @@
 package com.unasp.taskmanagement.domain.task.service;
 
 import com.unasp.taskmanagement.config.messages.Messages;
+import com.unasp.taskmanagement.domain.task.api.v1.request.NewCicleRequest;
 import com.unasp.taskmanagement.domain.task.api.v1.request.TaskRequest;
 import com.unasp.taskmanagement.domain.task.api.v1.request.TaskUpdateRequest;
 import com.unasp.taskmanagement.domain.task.api.v1.response.TaskResponse;
@@ -13,4 +14,5 @@ public interface TaskService {
   TotalValueTasksPerformedResponse totalValueTasksPerformed(String externalId);
   TaskResponse update(String externalId, TaskUpdateRequest taskUpdateRequest);
   Messages delete(String externalId);
+  Messages newCicle(NewCicleRequest newCicleRequest);
 }

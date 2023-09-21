@@ -1,6 +1,7 @@
 package com.unasp.taskmanagement.domain.task.api.v1;
 
 import com.unasp.taskmanagement.config.messages.Messages;
+import com.unasp.taskmanagement.domain.task.api.v1.request.NewCicleRequest;
 import com.unasp.taskmanagement.domain.task.api.v1.request.TaskRequest;
 import com.unasp.taskmanagement.domain.task.api.v1.request.TaskUpdateRequest;
 import com.unasp.taskmanagement.domain.task.api.v1.response.TaskResponse;
@@ -107,5 +108,20 @@ public class TaskController {
     log.info("Finalize task child {}", externalId);
 
     return ResponseEntity.status(HttpStatus.OK).body(message);
+  }
+
+  @PostMapping("/new-cicle")
+  @Operation(summary = "Start new cycle", description = "Api for start new cicle on the platform")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Ok", content =  { @Content(mediaType = "application/json", schema = @Schema(implementation = Messages.class)) }),
+      @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true))),
+      @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+  })
+  public ResponseEntity<Messages> newCicle (@RequestBody @Valid NewCicleRequest newCicleRequest) {
+    log.info("Start new cycle {}", newCicleRequest.getExternalIdUserChild());
+    Messages messages = taskService.newCicle(newCicleRequest);
+    log.info("Finalize new cycle {}", newCicleRequest.getExternalIdUserChild());
+
+    return  ResponseEntity.status(HttpStatus.CREATED).body(messages);
   }
 }

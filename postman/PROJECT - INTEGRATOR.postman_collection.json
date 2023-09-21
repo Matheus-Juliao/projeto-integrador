@@ -407,6 +407,42 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "New cicle",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"externalIdUserChild\": \"839a06e4-7b12-45d1-b934-4a19fd611818\",\r\n    \"reuseTasks\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/task/new-cicle",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"task",
+						"new-cicle"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

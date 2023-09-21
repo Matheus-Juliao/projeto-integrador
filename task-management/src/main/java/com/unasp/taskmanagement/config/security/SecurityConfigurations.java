@@ -32,7 +32,8 @@ public class SecurityConfigurations {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws  Exception {
     return httpSecurity
-          .cors().configurationSource(corsConfigurationSource).and()
+//          .cors().configurationSource(corsConfigurationSource).and()
+          .cors(corsCustomizer -> corsCustomizer.configurationSource(corsConfigurationSource))
           .csrf(AbstractHttpConfigurer::disable)
           .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
           .authorizeHttpRequests(authorize -> authorize
@@ -45,6 +46,7 @@ public class SecurityConfigurations {
             .requestMatchers(HttpMethod.POST, "/v1/task").hasRole("SPONSOR")
             .requestMatchers(HttpMethod.PUT, "/v1/task/{externalId}").hasRole("SPONSOR")
             .requestMatchers(HttpMethod.DELETE, "/v1/task/{externalId}").hasRole("SPONSOR")
+              .requestMatchers(HttpMethod.POST, "/v1/task/new-cicle").hasRole("SPONSOR")
             .anyRequest().authenticated()
           )
           .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

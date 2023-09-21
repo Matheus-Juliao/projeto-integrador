@@ -3,6 +3,7 @@ package com.unasp.taskmanagement.domain.task.service.impl;
 import com.unasp.taskmanagement.config.component.MessageProperty;
 import com.unasp.taskmanagement.config.messages.Messages;
 import com.unasp.taskmanagement.domain.authentication.service.AuthenticationService;
+import com.unasp.taskmanagement.domain.task.api.v1.request.NewCicleRequest;
 import com.unasp.taskmanagement.domain.task.api.v1.request.TaskRequest;
 import com.unasp.taskmanagement.domain.task.api.v1.request.TaskUpdateRequest;
 import com.unasp.taskmanagement.domain.task.api.v1.response.TaskResponse;
@@ -61,7 +62,6 @@ public class TaskServiceImpl implements TaskService {
         .collect(Collectors.toList());
   }
 
-  @Transactional
   @Override
   public TotalValueTasksPerformedResponse totalValueTasksPerformed(String externalId) {
     checkIfThereIsChild(externalId);
@@ -71,6 +71,7 @@ public class TaskServiceImpl implements TaskService {
     return TotalValueTasksPerformedResponse.builder().build().converter(total);
   }
 
+  @Transactional
   @Override
   public TaskResponse update(String externalId, TaskUpdateRequest taskUpdateRequest) {
     Optional<Task> taskOptional = taskRepository.findByExternalId(externalId);
@@ -85,6 +86,7 @@ public class TaskServiceImpl implements TaskService {
     return TaskResponse.builder().build().converter(task);
   }
 
+  @Transactional
   @Override
   public Messages delete(String externalId) {
     Optional<Task> taskOptional = taskRepository.findByExternalId(externalId);
@@ -94,6 +96,21 @@ public class TaskServiceImpl implements TaskService {
     taskRepository.delete(taskOptional.get());
 
     return Messages.builder().build().converter(messageProperty.getProperty("success.delete", messageProperty.getProperty("task")), HttpStatus.OK.value());
+  }
+
+  @Transactional
+  @Override
+  public Messages newCicle(NewCicleRequest newCicleRequest) {
+    checkIfThereIsChild(newCicleRequest.getExternalIdUserChild());
+    if(newCicleRequest.getReuseTasks()) {
+      List<Task> taskList = taskRepository.findByExternalIdUserChild(newCicleRequest.getExternalIdUserChild());
+      List<Task> updatedTaskList = taskList.stream().peek(task -> task.setPerformed(false)).collect(Collectors.toList());
+      taskRepository.saveAll(updatedTaskList);
+    } else {
+      taskRepository.deleteExternalIdUserChild(newCicleRequest.getExternalIdUserChild());
+    }
+
+    return Messages.builder().build().converter("New cycle started successfully", HttpStatus.OK.value());
   }
 
   private void checkIfThereIsChild(String externalId) {
