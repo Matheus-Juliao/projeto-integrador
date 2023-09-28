@@ -41,6 +41,7 @@ public class SecurityConfigurations {
             .requestMatchers(HttpMethod.POST, "/v1/user/sponsor/new-user").permitAll()
             .requestMatchers(HttpMethod.POST, "/v1/auth/login").permitAll()
             .requestMatchers(HttpMethod.POST, "/v1/auth/send-token").permitAll()
+            .requestMatchers(HttpMethod.POST, "/v1/auth/new-password").permitAll()
             .requestMatchers(HttpMethod.POST, "/v1/user/child/new-user").hasRole("SPONSOR")
             .requestMatchers(HttpMethod.PUT, "/v1/user/update-child/{externalId}").hasRole("SPONSOR")
             .requestMatchers(HttpMethod.DELETE, "/v1/user/delete-child/{externalId}").hasRole("SPONSOR")

@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,6 +52,9 @@ public class User implements Serializable, UserDetails {
   private LocalDateTime createdDate;
   @Column(name = "updated_date")
   private LocalDateTime updatedDate;
+  private String token;
+  @Column(name = "expiry_date_token")
+  private Date expiryDateToken;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -25,3 +25,6 @@ CREATE TABLE task(
 	created_date TIMESTAMP NOT NULL,
 	updated_date TIMESTAMP
 );
+
+ALTER TABLE users ADD COLUMN token VARCHAR(100);
+ALTER TABLE users ADD COLUMN expiry_date_token TIMESTAMP;
