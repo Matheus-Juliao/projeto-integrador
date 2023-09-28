@@ -1,6 +1,9 @@
 package com.unasp.taskmanagement.domain.authentication.api.v1;
 
-import com.unasp.taskmanagement.domain.authentication.api.v1.request.RequestAuthentication;
+import com.unasp.taskmanagement.config.messages.Messages;
+import com.unasp.taskmanagement.domain.authentication.api.v1.request.AuthenticationRequest;
+import com.unasp.taskmanagement.domain.authentication.api.v1.request.ResetPasswordRequest;
+import com.unasp.taskmanagement.domain.authentication.api.v1.request.SendTokenRequest;
 import com.unasp.taskmanagement.domain.authentication.api.v1.response.AuthenticationResponse;
 import com.unasp.taskmanagement.domain.authentication.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,11 +38,39 @@ public class AuthenticationController {
       @ApiResponse(responseCode = "200", description = "Ok", content =  { @Content(mediaType = "application/json", schema = @Schema(implementation = AuthenticationResponse.class)) }),
       @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
   })
-  public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid RequestAuthentication requestAuthentication) {
-    log.info("Start authentication {}", requestAuthentication.getLogin());
-    AuthenticationResponse authenticationResponse = authenticationService.login(requestAuthentication, authenticationManager);
-    log.info("Finalize authentication {}", requestAuthentication.getLogin());
+  public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
+    log.info("Start authentication {}", authenticationRequest.getLogin());
+    AuthenticationResponse authenticationResponse = authenticationService.login(authenticationRequest, authenticationManager);
+    log.info("Finalize authentication {}", authenticationRequest.getLogin());
 
     return ResponseEntity.status(HttpStatus.OK).body(authenticationResponse);
+  }
+
+  @PostMapping("/send-token")
+  @Operation(summary = "Send token", description = "API for send token by email on the platform")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Ok", content =  { @Content(mediaType = "application/json", schema = @Schema(implementation = Messages.class)) }),
+          @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+  })
+  public ResponseEntity<Messages> sendToken(@RequestBody @Valid SendTokenRequest sendTokenRequest) {
+    log.info("Start send token {}", sendTokenRequest.getEmail());
+    Messages messages = authenticationService.sendToken(sendTokenRequest);
+    log.info("Finalize send token {}", sendTokenRequest.getEmail());
+
+    return ResponseEntity.status(HttpStatus.OK).body(messages);
+  }
+
+  @PostMapping("/new-password")
+  @Operation(summary = "Redefine password", description = "API for a user reset login password on the platform")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Ok", content =  { @Content(mediaType = "application/json", schema = @Schema(implementation = Messages.class)) }),
+          @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true)))
+  })
+  public ResponseEntity<Messages> newPassword(@RequestBody @Valid ResetPasswordRequest resetPasswordRequest) {
+    log.info("Start password reset {}", resetPasswordRequest.getEmail());
+    Messages messages = authenticationService.newPassword(resetPasswordRequest);
+    log.info("Finalize password reset {}", resetPasswordRequest.getEmail());
+
+    return ResponseEntity.status(HttpStatus.OK).body(messages);
   }
 }
