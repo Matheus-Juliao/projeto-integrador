@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Marcos Chaves\",\r\n    \"email\": \"marcos@gmail.com\",\r\n    \"password\": \"12345\",\r\n    \"readTerms\": true\r\n}",
+					"raw": "{\r\n    \"name\": \"Matheus José Julião\",\r\n    \"email\": \"matheusjosejuliao@gmail.com\",\r\n    \"password\": \"12345\",\r\n    \"readTerms\": true\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -93,7 +93,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"login\": \"marcos@gmail.com\",\r\n    \"password\": \"12345\"\r\n}",
+					"raw": "{\r\n    \"login\": \"matheusjosejuliao@gmail.com\",\r\n    \"password\": \"12345\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -413,6 +413,62 @@
 						"v1",
 						"task",
 						"new-cicle"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"matheusjosejuliao@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/v1/auth/send-token",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"auth",
+						"send-token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"matheusjosejuliao@gmail.com\",\r\n    \"token\": \"f7Gxq\",\r\n    \"newPassword\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/v1/auth/new-password",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"auth",
+						"new-password"
 					]
 				}
 			},

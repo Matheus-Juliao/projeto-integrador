@@ -15,4 +15,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
   @Modifying
   @Query("DELETE FROM Task t WHERE t.externalIdUserChild = ?1")
   void deleteExternalIdUserChild(String externalId);
+  @Query("SELECT COUNT(*) FROM Task t WHERE t.externalIdUserChild = :externalId")
+  int totalTask(String externalId);
 }

@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
     User user = userChildRequest.converter(authenticationService.getAuthenticatedUser().getExternalId());
     userRepository.save(user);
 
-    return UserChildResponse.builder().build().converter(user);
+    return UserChildResponse.builder().build().converter(user, 0);
   }
 
   @Override
@@ -70,6 +70,7 @@ public class UserServiceImpl implements UserService {
              .role(user.getRole())
              .nickname(user.getLogin())
              .age(user.getAge())
+             .numberTasks(taskRepository.totalTask(user.getExternalId()))
              .build())
          .collect(Collectors.toList());
   }
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService {
     user.setUpdatedDate(LocalDateTime.now(ZoneId.of("UTC")));
     userRepository.save(user);
 
-    return UserChildResponse.builder().build().converter(user);
+    return UserChildResponse.builder().build().converter(user, taskRepository.totalTask(user.getExternalId()));
   }
 
   @Transactional

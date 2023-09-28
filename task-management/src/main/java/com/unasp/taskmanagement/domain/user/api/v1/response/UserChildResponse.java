@@ -13,14 +13,16 @@ public class UserChildResponse {
   private String nickname;
   private int age;
   private UserRole role;
+  private Integer numberTasks;
 
-  public UserChildResponse converter(User user) {
+  public UserChildResponse converter(User user, Integer numberTasks) {
     return UserChildResponse.builder()
         .externalId(user.getExternalId())
         .name(user.getName())
         .nickname(user.getLogin())
         .age(user.getAge())
         .role(user.getRole())
+        .numberTasks(numberTasks)
         .build();
   }
 }

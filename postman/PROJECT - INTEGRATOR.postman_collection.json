@@ -57,7 +57,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"login\": \"matheusjosejuliao@gmail.com\",\r\n    \"password\": \"12345\"\r\n}",
+					"raw": "{\r\n    \"login\": \"matheusjosejuliao@gmail.com\",\r\n    \"password\": \"123456\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -96,7 +96,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Isabela Rocha Julião\",\r\n    \"nickname\": \"isa_linda\",\r\n    \"password\": \"12345\",\r\n    \"age\": 7\r\n}",
+					"raw": "{\r\n    \"name\": \"Samuel Rocha Julião\",\r\n    \"nickname\": \"samuca\",\r\n    \"password\": \"12345\",\r\n    \"age\": 5\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -268,7 +268,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"externalIdUserChild\": \"839a06e4-7b12-45d1-b934-4a19fd611818\",\r\n    \"name\": \"Arrumar a cama\",\r\n    \"reward\": 1.55,\r\n    \"description\": \"Arrumar logo quando acordar\"\r\n}",
+					"raw": "{\r\n    \"externalIdUserChild\": \"77e69698-58de-475c-a433-e456e7ee2345\",\r\n    \"name\": \"Arrumar a cama\",\r\n    \"reward\": 1.55,\r\n    \"description\": \"Arrumar logo quando acordar\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -439,6 +439,66 @@
 						"v1",
 						"task",
 						"new-cicle"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send token",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"matheusjosejuliao@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/auth/send-token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"auth",
+						"send-token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"matheusjosejuliao@gmail.com\",\r\n    \"token\": \"f7Gxq\",\r\n    \"newPassword\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/auth/new-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"auth",
+						"new-password"
 					]
 				}
 			},
