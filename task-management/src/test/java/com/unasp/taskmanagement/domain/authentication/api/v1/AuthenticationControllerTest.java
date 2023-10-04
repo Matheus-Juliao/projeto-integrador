@@ -5,6 +5,7 @@ import com.unasp.taskmanagement.config.component.MessageProperty;
 import com.unasp.taskmanagement.config.messages.Messages;
 import com.unasp.taskmanagement.config.service.TokenService;
 import com.unasp.taskmanagement.domain.authentication.api.v1.request.AuthenticationRequest;
+import com.unasp.taskmanagement.domain.authentication.api.v1.request.ResetPasswordRequest;
 import com.unasp.taskmanagement.domain.authentication.api.v1.request.SendTokenRequest;
 import com.unasp.taskmanagement.domain.authentication.api.v1.response.AuthenticationResponse;
 import com.unasp.taskmanagement.domain.authentication.service.impl.AuthenticationServiceImpl;
@@ -33,22 +34,16 @@ public class AuthenticationControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
-
   @Autowired
   private ObjectMapper mapper;
-
   @MockBean
   private AuthenticationServiceImpl authenticationService;
-
   @MockBean
   private MessageProperty messageProperty;
-
   @MockBean
   AuthenticationManager authenticationManager;
-
   @MockBean
   UserRepository userRepository;
-
   @MockBean
   private TokenService tokenService;
 
@@ -63,36 +58,69 @@ public class AuthenticationControllerTest {
 
   @Test
   void mustLogin() throws Exception {
-    AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-    authenticationRequest.setLogin("Login");
-    authenticationRequest.setPassword("Password");
-    String token = "token";
-    AuthenticationResponse authenticationResponse = AuthenticationResponse.builder().build().converter(token);
-
-    when(authenticationService.login(any(), any())).thenReturn(authenticationResponse);
+    when(authenticationService.login(any(), any())).thenReturn(getAuthenticationResponse());
 
     mockMvc.perform(MockMvcRequestBuilders
         .post(urlBase + "/login")
         .headers(httpHeaders)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(mapper.writeValueAsString(authenticationRequest)))
+        .content(mapper.writeValueAsString(getAuthenticationRequest())))
         .andExpect(status().isOk());
   }
 
   @Test
   void mustSendToken() throws Exception {
-    SendTokenRequest sendTokenRequest = new SendTokenRequest();
-    sendTokenRequest.setEmail("email@test.com");
-
-    when(authenticationService.sendToken(sendTokenRequest)).thenReturn(Messages.builder().build().converter("Token successfully sent", HttpStatus.OK.value()));
-//    when(authenticationService.sendToken(sendTokenRequest)).thenReturn(Messages.builder().build().converter(messageProperty.getProperty("success.sendToken"), HttpStatus.OK.value()));
+    when(authenticationService.sendToken(getSendTokenRequest())).thenReturn(Messages.builder().build().converter("Token successfully sent", HttpStatus.OK.value()));
 
     mockMvc.perform(MockMvcRequestBuilders
             .post(urlBase + "/send-token")
             .headers(httpHeaders)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(sendTokenRequest)))
+            .content(mapper.writeValueAsString(getSendTokenRequest())))
             .andExpect(status().isOk());
+  }
+
+  @Test
+  void  mustNewPassword() throws Exception {
+    when(authenticationService.newPassword(getResetPasswordRequest())).thenReturn(Messages.builder().build().converter("Password changed successfully", HttpStatus.OK.value()));
+
+    mockMvc.perform(MockMvcRequestBuilders
+            .post(urlBase + "/new-password")
+            .headers(httpHeaders)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(getResetPasswordRequest())))
+        .andExpect(status().isOk());
+  }
+
+  private AuthenticationRequest getAuthenticationRequest() {
+    AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+    authenticationRequest.setLogin("Login");
+    authenticationRequest.setPassword("Password");
+
+    return authenticationRequest;
+  }
+
+  private AuthenticationResponse getAuthenticationResponse() {
+    String token = "token";
+    AuthenticationResponse authenticationResponse = AuthenticationResponse.builder().build().converter(token);
+
+    return authenticationResponse;
+  }
+
+  private SendTokenRequest getSendTokenRequest() {
+    SendTokenRequest sendTokenRequest = new SendTokenRequest();
+    sendTokenRequest.setEmail("email@test.com");
+
+    return sendTokenRequest;
+  }
+
+  private ResetPasswordRequest getResetPasswordRequest() {
+    ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest();
+    resetPasswordRequest.setEmail("email@test.com");
+    resetPasswordRequest.setToken("token");
+    resetPasswordRequest.setNewPassword("new-password");
+
+    return resetPasswordRequest;
   }
 
 }
