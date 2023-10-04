@@ -38,7 +38,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@SuppressWarnings("unused")
 public class AuthenticationServiceImpl implements AuthenticationService, UserDetailsService {
   private static final int TOKEN_LENGTH = 5;
   private static final int EXPIRATION_MINUTES = 10;

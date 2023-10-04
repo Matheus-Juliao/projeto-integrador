@@ -102,9 +102,8 @@ public class AuthenticationControllerTest {
 
   private AuthenticationResponse getAuthenticationResponse() {
     String token = "token";
-    AuthenticationResponse authenticationResponse = AuthenticationResponse.builder().build().converter(token);
 
-    return authenticationResponse;
+    return AuthenticationResponse.builder().build().converter(token);
   }
 
   private SendTokenRequest getSendTokenRequest() {

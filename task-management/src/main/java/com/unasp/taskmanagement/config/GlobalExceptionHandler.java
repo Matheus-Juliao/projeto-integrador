@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @Slf4j
-@SuppressWarnings("unused")
 public class GlobalExceptionHandler {
   @Autowired
   private MessageProperty messageProperty;

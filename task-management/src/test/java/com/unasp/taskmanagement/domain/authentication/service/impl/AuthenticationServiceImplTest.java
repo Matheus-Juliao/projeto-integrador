@@ -11,9 +11,7 @@ import com.unasp.taskmanagement.domain.user.entity.User;
 import com.unasp.taskmanagement.domain.user.repository.UserRepository;
 import com.unasp.taskmanagement.exception.BusinessException;
 import com.unasp.taskmanagement.exception.NotFoundException;
-import jakarta.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +27,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -133,13 +130,43 @@ public class AuthenticationServiceImplTest {
     assertEquals(HttpStatus.OK.value(), messages.getCode());
   }
 
+  @Test
+  void mustThrowsUserNotFound_WhenNewPassword() throws Exception {
+    when(userRepository.findByLogin(anyString())).thenReturn(Optional.empty());
+
+    Exception exception = assertThrows(NotFoundException.class, () -> authenticationService.newPassword(getResetPasswordRequest()));
+    assertEquals(messageProperty.getProperty("error.notFound", messageProperty.getProperty("user")), exception.getMessage());
+  }
+
+  @Test
+  void mustThrowsInvalidToken_WhenNewPassword() throws Exception {
+    when(userRepository.findByLogin(anyString())).thenReturn(Optional.of(getUser()));
+
+    ResetPasswordRequest resetPasswordRequest = getResetPasswordRequest();
+    resetPasswordRequest.setToken("token-invalid");
+
+    Exception exception = assertThrows(BusinessException.class, () -> authenticationService.newPassword(resetPasswordRequest));
+    assertEquals(messageProperty.getProperty("error.invalidToken"), exception.getMessage());
+  }
+
+  @Test
+  void mustThrowsExpirationToken() throws Exception {
+    User user = getUser();
+    user.setExpiryDateToken(java.sql.Timestamp.valueOf(LocalDateTime.now().plusMinutes(-10)));
+
+    when(userRepository.findByLogin(anyString())).thenReturn(Optional.of(user));
+
+    Exception exception = assertThrows(BusinessException.class, () -> authenticationService.newPassword(getResetPasswordRequest()));
+    assertEquals(messageProperty.getProperty("error.expirationDate"), exception.getMessage());
+  }
+
   private User getUser() {
     return User.builder()
         .externalId("63f37d4a-a4df-4beb-be6c-2f84695987c8")
         .name("Test")
         .login("email@test.com")
         .token(BCrypt.hashpw("token", BCrypt.gensalt()))
-        .expiryDateToken(java.sql.Timestamp.valueOf(LocalDateTime.now().plus(10, ChronoUnit.MINUTES)))
+        .expiryDateToken(java.sql.Timestamp.valueOf(LocalDateTime.now().plusMinutes(10)))
         .build();
   }
 

@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/user")
 @Slf4j
 @CrossOrigin(origins = "http://localhost:5173")
-@SuppressWarnings("unused")
 public class UserController {
   @Autowired
   private UserService userService;

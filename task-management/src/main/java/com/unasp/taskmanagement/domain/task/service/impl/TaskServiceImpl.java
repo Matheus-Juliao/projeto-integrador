@@ -26,7 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
-@SuppressWarnings("unused")
 public class TaskServiceImpl implements TaskService {
   @Autowired
   TaskRepository taskRepository;

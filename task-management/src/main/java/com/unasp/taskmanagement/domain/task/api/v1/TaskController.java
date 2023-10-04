@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/task")
 @Slf4j
-@SuppressWarnings("unused")
 public class TaskController {
   @Autowired
   TaskService taskService;
