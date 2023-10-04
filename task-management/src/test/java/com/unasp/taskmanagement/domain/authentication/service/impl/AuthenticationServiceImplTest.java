@@ -13,6 +13,7 @@ import com.unasp.taskmanagement.exception.BusinessException;
 import com.unasp.taskmanagement.exception.NotFoundException;
 import jakarta.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -138,7 +139,7 @@ public class AuthenticationServiceImplTest {
         .name("Test")
         .login("email@test.com")
         .token(BCrypt.hashpw("token", BCrypt.gensalt()))
-//        .expiryDateToken()
+        .expiryDateToken(java.sql.Timestamp.valueOf(LocalDateTime.now().plus(10, ChronoUnit.MINUTES)))
         .build();
   }
 
