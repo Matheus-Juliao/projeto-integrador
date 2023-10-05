@@ -117,9 +117,9 @@ public class TaskController {
       @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
   })
   public ResponseEntity<Messages> newCicle (@RequestBody @Valid NewCicleRequest newCicleRequest) {
-    log.info("Start new cycle {}", newCicleRequest.getExternalIdUserChild());
+    log.info("Start new cicle {}", newCicleRequest.getExternalIdUserChild());
     Messages messages = taskService.newCicle(newCicleRequest);
-    log.info("Finalize new cycle {}", newCicleRequest.getExternalIdUserChild());
+    log.info("Finalize new cicle {}", newCicleRequest.getExternalIdUserChild());
 
     return  ResponseEntity.status(HttpStatus.CREATED).body(messages);
   }

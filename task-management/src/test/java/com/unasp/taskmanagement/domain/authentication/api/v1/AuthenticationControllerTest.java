@@ -36,6 +36,7 @@ public class AuthenticationControllerTest {
   private MockMvc mockMvc;
   @Autowired
   private ObjectMapper mapper;
+
   @MockBean
   private AuthenticationServiceImpl authenticationService;
   @MockBean
