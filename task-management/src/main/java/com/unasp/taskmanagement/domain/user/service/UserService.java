@@ -10,7 +10,8 @@ import java.util.List;
 public interface UserService {
   Messages createSponsor(UserSponsorRequest userSponsorRequest);
   UserChildResponse createChild(UserChildRequest userChildRequest);
-  List<UserChildResponse> listChild(String externalId);
+  List<UserChildResponse> listAllChild(String externalId);
   UserChildResponse updateChild(String externalId, UserChildUpdateRequest userChildUpdateRequest);
   Messages deleteChild(String externalId);
+  UserChildResponse listChild(String externalId);
 }

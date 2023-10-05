@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<UserChildResponse> listChild(String externalId) {
+  public List<UserChildResponse> listAllChild(String externalId) {
      return userRepository.findByUserCreator(externalId)
          .stream().map(user -> UserChildResponse.builder()
              .externalId(user.getExternalId())
@@ -77,17 +77,14 @@ public class UserServiceImpl implements UserService {
   @Transactional
   @Override
   public UserChildResponse updateChild(String externalId, UserChildUpdateRequest userChildUpdateRequest) {
-    Optional<User> userOptional = userRepository.findByExternalId(externalId);
-    if(userOptional.isEmpty()) {
-      throw new NotFoundException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("user")));
-    }
+    User user = getUser(externalId);
 
-    if(userChildUpdateRequest.getNickname() != null && !userOptional.get().getLogin().equals(userChildUpdateRequest.getNickname())) {
+    if(userChildUpdateRequest.getNickname() != null && !user.getLogin().equals(userChildUpdateRequest.getNickname())) {
       if(userRepository.findByLogin(userChildUpdateRequest.getNickname()).isPresent()) {
         throw new BusinessException(messageProperty.getProperty("error.already.nickname", messageProperty.getProperty("user")));
       }
     }
-    User user = userOptional.get();
+
     userChildUpdateRequest.setPassword(userChildUpdateRequest.getPassword() == null ? user.getPassword() : new BCryptPasswordEncoder().encode(userChildUpdateRequest.getPassword()));
     BeanUtils.copyProperties(userChildUpdateRequest, user);
     user.setUpdatedDate(LocalDateTime.now(ZoneId.of("UTC")));
@@ -99,13 +96,26 @@ public class UserServiceImpl implements UserService {
   @Transactional
   @Override
   public Messages deleteChild(String externalId) {
+    User user = getUser(externalId);
+    taskRepository.deleteExternalIdUserChild(externalId);
+    userRepository.delete(user);
+
+    return Messages.builder().build().converter(messageProperty.getProperty("success.delete", messageProperty.getProperty("user")), HttpStatus.OK.value());
+  }
+
+  @Override
+  public UserChildResponse listChild(String externalId) {
+    User user = getUser(externalId);
+
+    return UserChildResponse.builder().build().converter(user, taskRepository.totalTask(user.getExternalId()));
+  }
+
+  private User getUser(String externalId) {
     Optional<User> userOptional = userRepository.findByExternalId(externalId);
     if(userOptional.isEmpty()) {
       throw new NotFoundException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("user")));
     }
-    taskRepository.deleteExternalIdUserChild(externalId);
-    userRepository.delete(userOptional.get());
 
-    return Messages.builder().build().converter(messageProperty.getProperty("success.delete", messageProperty.getProperty("user")), HttpStatus.OK.value());
+    return userOptional.get();
   }
 }

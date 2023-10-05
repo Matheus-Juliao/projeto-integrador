@@ -67,10 +67,10 @@ public class UserController {
       @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true))),
       @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
   })
-  public ResponseEntity<List<UserChildResponse>> listChild() {
+  public ResponseEntity<List<UserChildResponse>> listAllChild() {
     String externalId = authenticationService.getAuthenticatedUser().getExternalId();
     log.info("Start of list search {}", externalId);
-    List<UserChildResponse> list = userService.listChild(externalId);
+    List<UserChildResponse> list = userService.listAllChild(externalId);
     log.info("Finalize of list search {}", externalId);
 
     return ResponseEntity.status(HttpStatus.OK).body(list);
@@ -104,5 +104,20 @@ public class UserController {
     log.info("Finalize delete child {}", externalId);
 
     return ResponseEntity.status(HttpStatus.OK).body(message);
+  }
+
+  @GetMapping("/list-child/{externalId}")
+  @Operation(summary = "Returns a child of Sponsor", description = "API to list a child of Sponsor and their information on the platform")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Ok", content =  { @Content(mediaType = "application/json", schema = @Schema(implementation = UserChildResponse.class)) }),
+          @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true))),
+          @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+  })
+  public ResponseEntity<UserChildResponse> listChild(@PathVariable String externalId) {
+    log.info("Start of search by child {}", externalId);
+    UserChildResponse child = userService.listChild(externalId);
+    log.info("Finalize of search by child {}", externalId);
+
+    return ResponseEntity.status(HttpStatus.OK).body(child);
   }
 }
