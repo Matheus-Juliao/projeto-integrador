@@ -62,11 +62,11 @@ public class AuthenticationControllerTest {
     when(authenticationService.login(any(), any())).thenReturn(getAuthenticationResponse());
 
     mockMvc.perform(MockMvcRequestBuilders
-        .post(urlBase + "/login")
-        .headers(httpHeaders)
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(mapper.writeValueAsString(getAuthenticationRequest())))
-        .andExpect(status().isOk());
+          .post(urlBase + "/login")
+          .headers(httpHeaders)
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(mapper.writeValueAsString(getAuthenticationRequest())))
+          .andExpect(status().isOk());
   }
 
   @Test
@@ -74,11 +74,11 @@ public class AuthenticationControllerTest {
     when(authenticationService.sendToken(getSendTokenRequest())).thenReturn(Messages.builder().build().converter("Token successfully sent", HttpStatus.OK.value()));
 
     mockMvc.perform(MockMvcRequestBuilders
-            .post(urlBase + "/send-token")
-            .headers(httpHeaders)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(getSendTokenRequest())))
-            .andExpect(status().isOk());
+          .post(urlBase + "/send-token")
+          .headers(httpHeaders)
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(mapper.writeValueAsString(getSendTokenRequest())))
+          .andExpect(status().isOk());
   }
 
   @Test
@@ -86,11 +86,11 @@ public class AuthenticationControllerTest {
     when(authenticationService.newPassword(getResetPasswordRequest())).thenReturn(Messages.builder().build().converter("Password changed successfully", HttpStatus.OK.value()));
 
     mockMvc.perform(MockMvcRequestBuilders
-            .post(urlBase + "/new-password")
-            .headers(httpHeaders)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(getResetPasswordRequest())))
-        .andExpect(status().isOk());
+          .post(urlBase + "/new-password")
+          .headers(httpHeaders)
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(mapper.writeValueAsString(getResetPasswordRequest())))
+          .andExpect(status().isOk());
   }
 
   private AuthenticationRequest getAuthenticationRequest() {

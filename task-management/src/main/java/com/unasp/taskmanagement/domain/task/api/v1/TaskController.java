@@ -121,6 +121,6 @@ public class TaskController {
     Messages messages = taskService.newCicle(newCicleRequest);
     log.info("Finalize new cicle {}", newCicleRequest.getExternalIdUserChild());
 
-    return  ResponseEntity.status(HttpStatus.CREATED).body(messages);
+    return  ResponseEntity.status(HttpStatus.OK).body(messages);
   }
 }

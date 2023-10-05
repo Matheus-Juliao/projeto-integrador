@@ -2,11 +2,16 @@ package com.unasp.taskmanagement.domain.task.api.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unasp.taskmanagement.config.component.MessageProperty;
+import com.unasp.taskmanagement.config.messages.Messages;
 import com.unasp.taskmanagement.config.service.TokenService;
+import com.unasp.taskmanagement.domain.task.api.v1.request.NewCicleRequest;
 import com.unasp.taskmanagement.domain.task.api.v1.request.TaskRequest;
+import com.unasp.taskmanagement.domain.task.api.v1.request.TaskUpdateRequest;
 import com.unasp.taskmanagement.domain.task.api.v1.response.TaskResponse;
+import com.unasp.taskmanagement.domain.task.api.v1.response.TotalValueTasksPerformedResponse;
 import com.unasp.taskmanagement.domain.task.service.TaskService;
 import com.unasp.taskmanagement.domain.user.repository.UserRepository;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +20,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -47,11 +53,13 @@ public class TaskControllerTest {
 
     private HttpHeaders httpHeaders;
     private final String urlBase = "/v1/task";
+    private String externalId;
 
     @BeforeEach
     void setup() {
-        httpHeaders = new HttpHeaders();
+        externalId = "104dacaf-cd40-46f7-bb24-a7c5ee64ae59";
         mapper = new ObjectMapper();
+        httpHeaders = new HttpHeaders();
     }
 
     @Test
@@ -59,11 +67,68 @@ public class TaskControllerTest {
         when(taskService.create(any())).thenReturn(getTaskResponse());
 
         mockMvc.perform(MockMvcRequestBuilders
-                .post(urlBase)
+            .post(urlBase)
+            .headers(httpHeaders)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(getTaskRequest())))
+            .andExpect(status().isCreated());
+    }
+
+    @Test
+    void mustListTask() throws Exception {
+        when(taskService.listTask(anyString())).thenReturn(List.of(getTaskResponse()));
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .get(urlBase + "/{externalId}", externalId)
+            .headers(httpHeaders)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void mustTotalValueTasksPerformed() throws Exception {
+        when(taskService.totalValueTasksPerformed(anyString())).thenReturn(getTotalValueTasksPerformed());
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .get(urlBase + "/total-value-tasks-performed/{externalId}", externalId)
+            .headers(httpHeaders)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void mustUpdate() throws Exception {
+        when(taskService.update(anyString(), any())).thenReturn(getTaskResponse());
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .put(urlBase + "/{externalId}", externalId)
+            .headers(httpHeaders)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(getTaskUpdateRequest())))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void mustDelete() throws Exception {
+        when(taskService.delete(anyString())).thenReturn(Messages.builder().build());
+
+        mockMvc.perform(MockMvcRequestBuilders
+            .delete(urlBase + "/{externalId}", externalId)
+            .headers(httpHeaders)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void mustNewCicle() throws Exception {
+        when(taskService.newCicle(any())).thenReturn(getMessage());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .post(urlBase + "/new-cicle")
                 .headers(httpHeaders)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(getTaskRequest())))
-                .andExpect(status().isCreated());
+                .content(mapper.writeValueAsString(getNewCicleRequest())))
+                .andExpect(status().isOk());
     }
 
     private TaskRequest getTaskRequest() {
@@ -84,6 +149,32 @@ public class TaskControllerTest {
                 .performed(false)
                 .createdDate(LocalDateTime.now())
                 .build();
+    }
+
+    private TaskUpdateRequest getTaskUpdateRequest() {
+        return TaskUpdateRequest.builder()
+            .name("To do the dishes")
+            .reward(0.1)
+            .description("Always wash dishes after eating")
+            .performed(true)
+            .build();
+    }
+
+    private TotalValueTasksPerformedResponse getTotalValueTasksPerformed() {
+        return TotalValueTasksPerformedResponse.builder()
+            .totalValueTasksPerformed(0.0)
+            .build();
+    }
+
+    private Messages getMessage() {
+        return Messages.builder().build();
+    }
+
+    private NewCicleRequest getNewCicleRequest() {
+        return NewCicleRequest.builder()
+            .externalIdUserChild(externalId)
+            .reuseTasks(false)
+            .build();
     }
 
 }
