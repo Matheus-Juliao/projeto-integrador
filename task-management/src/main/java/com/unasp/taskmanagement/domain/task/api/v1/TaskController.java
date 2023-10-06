@@ -49,16 +49,16 @@ public class TaskController {
     return  ResponseEntity.status(HttpStatus.CREATED).body(taskResponse);
   }
 
-  @GetMapping("/{externalId}")
-  @Operation(summary = "List task", description = "List a child's tasks")
+  @GetMapping("list-all/{externalId}")
+  @Operation(summary = "List task", description = "List a child's all tasks")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Ok", content =  { @Content(mediaType = "application/json", schema = @Schema(implementation = TaskResponse.class)) }),
       @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true))),
       @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
   })
-  public ResponseEntity<List<TaskResponse>> listTask (@PathVariable String externalId) {
+  public ResponseEntity<List<TaskResponse>> listAll (@PathVariable String externalId) {
     log.info("Start listing tasks performed {}", externalId);
-    List<TaskResponse> list = taskService.listTask(externalId);
+    List<TaskResponse> list = taskService.listAll(externalId);
     log.info("Finalize listing tasks performed {}", externalId);
 
     return  ResponseEntity.status(HttpStatus.OK).body(list);
@@ -122,5 +122,20 @@ public class TaskController {
     log.info("Finalize new cicle {}", newCicleRequest.getExternalIdUserChild());
 
     return  ResponseEntity.status(HttpStatus.OK).body(messages);
+  }
+
+  @GetMapping("/{externalId}")
+  @Operation(summary = "List task", description = "List a child's task")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Ok", content =  { @Content(mediaType = "application/json", schema = @Schema(implementation = TaskResponse.class)) }),
+      @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(schema = @Schema(hidden = true))),
+      @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true)))
+  })
+  public ResponseEntity<TaskResponse> list (@PathVariable String externalId) {
+    log.info("Start listing tasks performed {}", externalId);
+    TaskResponse task = taskService.list(externalId);
+    log.info("Finalize listing tasks performed {}", externalId);
+
+    return  ResponseEntity.status(HttpStatus.OK).body(task);
   }
 }

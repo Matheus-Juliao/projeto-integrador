@@ -75,11 +75,11 @@ public class TaskControllerTest {
     }
 
     @Test
-    void mustListTask() throws Exception {
-        when(taskService.listTask(anyString())).thenReturn(List.of(getTaskResponse()));
+    void mustListAll() throws Exception {
+        when(taskService.listAll(anyString())).thenReturn(List.of(getTaskResponse()));
 
         mockMvc.perform(MockMvcRequestBuilders
-            .get(urlBase + "/{externalId}", externalId)
+            .get(urlBase + "/list-all/{externalId}", externalId)
             .headers(httpHeaders)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
@@ -131,9 +131,20 @@ public class TaskControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void mustList() throws Exception {
+        when(taskService.list(anyString())).thenReturn(getTaskResponse());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get(urlBase + "/{externalId}", externalId)
+                .headers(httpHeaders)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+    }
+
     private TaskRequest getTaskRequest() {
         return TaskRequest.builder()
-                .externalIdUserChild("63f37d4a-a4df-4beb-be6c-2f84695987c1")
+                .externalIdUserChild(externalId)
                 .name("To do the dishes")
                 .reward(0.1)
                 .description("Always wash dishes after eating")
@@ -142,7 +153,7 @@ public class TaskControllerTest {
 
     private TaskResponse getTaskResponse() {
         return TaskResponse.builder()
-                .externalId("63f37d4a-a4df-4beb-be6c-2f84695987c8")
+                .externalId(externalId)
                 .name("To do the dishes")
                 .reward(0.1)
                 .description("Always wash dishes after eating")

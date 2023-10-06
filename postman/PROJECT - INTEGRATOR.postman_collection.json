@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Matheus José Julião\",\r\n    \"email\": \"matheusjosejuliao@gmail.com\",\r\n    \"password\": \"12345\",\r\n    \"readTerms\": true\r\n}",
+					"raw": "{\r\n    \"name\": \"Matheus José Julião\",\r\n    \"email\": \"matheusjosejuliao2@gmail.com\",\r\n    \"password\": \"12345\",\r\n    \"readTerms\": true\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -57,7 +57,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"login\": \"matheusjosejuliao@gmail.com\",\r\n    \"password\": \"123456\"\r\n}",
+					"raw": "{\r\n    \"login\": \"matheusjosejuliao@gmail.com\",\r\n    \"password\": \"12345\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -164,7 +164,7 @@
 			"response": []
 		},
 		{
-			"name": "List child",
+			"name": "List all child",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -185,6 +185,34 @@
 						"v1",
 						"user",
 						"list-child"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List child",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/user/list-child/fc545849-f866-438e-993f-6295798d7d9f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"user",
+						"list-child",
+						"fc545849-f866-438e-993f-6295798d7d9f"
 					]
 				}
 			},
@@ -268,7 +296,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"externalIdUserChild\": \"77e69698-58de-475c-a433-e456e7ee2345\",\r\n    \"name\": \"Arrumar a cama\",\r\n    \"reward\": 1.55,\r\n    \"description\": \"Arrumar logo quando acordar\"\r\n}",
+					"raw": "{\r\n    \"externalIdUserChild\": \"839a06e4-7b12-45d1-b934-4a19fd611818\",\r\n    \"name\": \"Arrumar a cama\",\r\n    \"reward\": 1.55,\r\n    \"description\": \"Arrumar logo quando acordar\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -291,6 +319,34 @@
 			"response": []
 		},
 		{
+			"name": "List all task",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/v1/task/list-all-task/839a06e4-7b12-45d1-b934-4a19fd611818",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"task",
+						"list-all-task",
+						"839a06e4-7b12-45d1-b934-4a19fd611818"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "List task",
 			"request": {
 				"method": "GET",
@@ -302,7 +358,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8080/v1/task/839a06e4-7b12-45d1-b934-4a19fd611818",
+					"raw": "http://localhost:8080/v1/task/4d97e3ae-659b-4ef1-8ac5-d5df9dd0acd2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -311,7 +367,7 @@
 					"path": [
 						"v1",
 						"task",
-						"839a06e4-7b12-45d1-b934-4a19fd611818"
+						"4d97e3ae-659b-4ef1-8ac5-d5df9dd0acd2"
 					]
 				}
 			},
@@ -481,7 +537,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"matheusjosejuliao@gmail.com\",\r\n    \"token\": \"f7Gxq\",\r\n    \"newPassword\": \"123456\"\r\n}",
+					"raw": "{\r\n    \"email\": \"matheusjosejuliao@gmail.com\",\r\n    \"token\": \"6xrYY\",\r\n    \"newPassword\": \"12345\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

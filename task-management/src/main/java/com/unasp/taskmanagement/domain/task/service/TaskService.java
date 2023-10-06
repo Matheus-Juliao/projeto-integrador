@@ -10,9 +10,10 @@ import java.util.List;
 
 public interface TaskService {
   TaskResponse create(TaskRequest taskRequest);
-  List<TaskResponse> listTask(String externalId);
+  List<TaskResponse> listAll(String externalId);
   TotalValueTasksPerformedResponse totalValueTasksPerformed(String externalId);
   TaskResponse update(String externalId, TaskUpdateRequest taskUpdateRequest);
   Messages delete(String externalId);
   Messages newCicle(NewCicleRequest newCicleRequest);
+  TaskResponse list(String externalId);
 }

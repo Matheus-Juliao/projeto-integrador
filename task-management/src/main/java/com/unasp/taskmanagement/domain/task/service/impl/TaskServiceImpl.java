@@ -46,7 +46,7 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  public List<TaskResponse> listTask(String externalId) {
+  public List<TaskResponse> listAll(String externalId) {
     checkIfThereIsChild(externalId);
 
     return taskRepository.findByExternalIdUserChild(externalId)
@@ -73,11 +73,7 @@ public class TaskServiceImpl implements TaskService {
   @Transactional
   @Override
   public TaskResponse update(String externalId, TaskUpdateRequest taskUpdateRequest) {
-    Optional<Task> taskOptional = taskRepository.findByExternalId(externalId);
-    if(taskOptional.isEmpty()) {
-      throw new BusinessException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("task")));
-    }
-    Task task = taskOptional.get();
+    Task task = getTask(externalId);
     BeanUtils.copyProperties(taskUpdateRequest, task);
     task.setUpdatedDate(LocalDateTime.now(ZoneId.of("UTC")));
     taskRepository.save(task);
@@ -112,9 +108,25 @@ public class TaskServiceImpl implements TaskService {
     return Messages.builder().build().converter("New cycle started successfully", HttpStatus.OK.value());
   }
 
+  @Override
+  public TaskResponse list(String externalId) {
+    Task task = getTask(externalId);
+
+    return TaskResponse.builder().build().converter(task);
+  }
+
   private void checkIfThereIsChild(String externalId) {
     if(userRepository.findByExternalId(externalId).isEmpty()) {
       throw new NotFoundException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("child")));
     }
+  }
+
+  private Task getTask(String externalId) {
+    Optional<Task> taskOptional = taskRepository.findByExternalId(externalId);
+    if(taskOptional.isEmpty()) {
+      throw new BusinessException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("task")));
+    }
+
+    return taskOptional.get();
   }
 }

@@ -36,44 +36,6 @@
 			"response": []
 		},
 		{
-			"name": "Create user child",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "{{Authorization}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Gabriel\",\r\n    \"nickname\": \"gabriel\",\r\n    \"password\": \"12345\",\r\n    \"age\": 7\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{url}}/v1/user/child/new-user",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"v1",
-						"user",
-						"child",
-						"new-user"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Login sponsor",
 			"event": [
 				{
@@ -115,6 +77,44 @@
 			"response": []
 		},
 		{
+			"name": "Create user child",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Gabriel\",\r\n    \"nickname\": \"gabriel\",\r\n    \"password\": \"12345\",\r\n    \"age\": 7\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/v1/user/child/new-user",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"user",
+						"child",
+						"new-user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Login child",
 			"event": [
 				{
@@ -150,6 +150,31 @@
 						"v1",
 						"auth",
 						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List all child",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/v1/user/list-child",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"user",
+						"list-child"
 					]
 				}
 			},
@@ -269,6 +294,32 @@
 					"path": [
 						"v1",
 						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List all task",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/v1/task/list-all-task/839a06e4-7b12-45d1-b934-4a19fd611818",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"task",
+						"list-all-task",
+						"839a06e4-7b12-45d1-b934-4a19fd611818"
 					]
 				}
 			},
