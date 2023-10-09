@@ -12,7 +12,6 @@ import com.unasp.taskmanagement.domain.task.entity.Task;
 import com.unasp.taskmanagement.domain.task.repository.TaskRepository;
 import com.unasp.taskmanagement.domain.task.service.TaskService;
 import com.unasp.taskmanagement.domain.user.repository.UserRepository;
-import com.unasp.taskmanagement.exception.BusinessException;
 import com.unasp.taskmanagement.exception.NotFoundException;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -85,11 +84,8 @@ public class TaskServiceImpl implements TaskService {
   @Transactional
   @Override
   public Messages delete(String externalId) {
-    Optional<Task> taskOptional = taskRepository.findByExternalId(externalId);
-    if(taskOptional.isEmpty()) {
-      throw new BusinessException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("task")));
-    }
-    taskRepository.delete(taskOptional.get());
+    Task task = getTask(externalId);
+    taskRepository.delete(task);
 
     return Messages.builder().build().converter(messageProperty.getProperty("success.delete", messageProperty.getProperty("task")), HttpStatus.OK.value());
   }
@@ -106,7 +102,7 @@ public class TaskServiceImpl implements TaskService {
       taskRepository.deleteExternalIdUserChild(newCicleRequest.getExternalIdUserChild());
     }
 
-    return Messages.builder().build().converter("New cycle started successfully", HttpStatus.OK.value());
+    return Messages.builder().build().converter(messageProperty.getProperty("success.newCicle"), HttpStatus.OK.value());
   }
 
   @Override
@@ -125,7 +121,7 @@ public class TaskServiceImpl implements TaskService {
   private Task getTask(String externalId) {
     Optional<Task> taskOptional = taskRepository.findByExternalId(externalId);
     if(taskOptional.isEmpty()) {
-      throw new BusinessException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("task")));
+      throw new NotFoundException(messageProperty.getProperty("error.notFound", messageProperty.getProperty("task")));
     }
 
     return taskOptional.get();

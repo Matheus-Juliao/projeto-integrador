@@ -1,9 +1,12 @@
 package com.unasp.taskmanagement.domain.task.service.impl;
 
 import com.unasp.taskmanagement.config.component.MessageProperty;
+import com.unasp.taskmanagement.config.messages.Messages;
 import com.unasp.taskmanagement.config.service.TokenService;
 import com.unasp.taskmanagement.domain.authentication.service.impl.AuthenticationServiceImpl;
+import com.unasp.taskmanagement.domain.task.api.v1.request.NewCicleRequest;
 import com.unasp.taskmanagement.domain.task.api.v1.request.TaskRequest;
+import com.unasp.taskmanagement.domain.task.api.v1.request.TaskUpdateRequest;
 import com.unasp.taskmanagement.domain.task.api.v1.response.TaskResponse;
 import com.unasp.taskmanagement.domain.task.api.v1.response.TotalValueTasksPerformedResponse;
 import com.unasp.taskmanagement.domain.task.entity.Task;
@@ -38,9 +41,6 @@ public class TaskServiceImplTest {
     private UserRepository userRepository;
     @Mock
     private MessageProperty messageProperty;
-    @Mock
-    private TokenService tokenService;
-
     @Mock
     private AuthenticationServiceImpl authenticationService;
 
@@ -109,6 +109,87 @@ public class TaskServiceImplTest {
         assertEquals(messageProperty.getProperty("error.notFound", messageProperty.getProperty("task")), exception.getMessage());
     }
 
+    @Test
+    void mustUpdate() throws Exception {
+        when(taskRepository.findByExternalId(anyString())).thenReturn(Optional.of(getTask()));
+
+        TaskResponse taskResponse = taskService.update(externalId, getTaskUpdateRequest());
+
+        verify(taskRepository, times(1)).save(any());
+        assertEquals(taskResponse, getTaskUpdateResponse());
+    }
+
+    @Test
+    void mustThrowsTaskNotFound_WhenUpdate() throws Exception {
+        when(taskRepository.findByExternalId(anyString())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(NotFoundException.class, () -> taskService.update(externalId, getTaskUpdateRequest()));
+        assertEquals(messageProperty.getProperty("error.notFound", messageProperty.getProperty("task")), exception.getMessage());
+    }
+
+    @Test
+    void mustDelete() throws Exception {
+        when(taskRepository.findByExternalId(anyString())).thenReturn(Optional.of(getTask()));
+
+        Messages messages = taskService.delete(externalId);
+        verify(taskRepository, times(1)).delete(any());
+        assertEquals(messageProperty.getProperty("success.delete", messageProperty.getProperty("task")), messages.getMessage());
+    }
+
+    @Test
+    void mustThrowsTaskNotFound_WhenDelete() throws Exception {
+        when(taskRepository.findByExternalId(anyString())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(NotFoundException.class, () -> taskService.delete(externalId));
+        assertEquals(messageProperty.getProperty("error.notFound", messageProperty.getProperty("task")), exception.getMessage());
+    }
+
+    @Test
+    void mustNewCicle_WhenReuseTasksTrue() throws Exception {
+        when(userRepository.findByExternalId(anyString())).thenReturn(Optional.of(getUser()));
+        when(taskRepository.findByExternalIdUserChild(anyString())).thenReturn(List.of(getTask()));
+
+        Messages messages = taskService.newCicle(getNewCicleRequest());
+        verify(taskRepository, times(1)).saveAll(any());
+        assertEquals(messageProperty.getProperty("success.newCicle"), messages.getMessage());
+    }
+
+    @Test
+    void mustNewCicle_WhenReuseTasksFalse() throws Exception {
+        when(userRepository.findByExternalId(anyString())).thenReturn(Optional.of(getUser()));
+
+        NewCicleRequest newCicleRequest = getNewCicleRequest();
+        newCicleRequest.setReuseTasks(false);
+
+        Messages messages = taskService.newCicle(newCicleRequest);
+        verify(taskRepository, times(1)).deleteExternalIdUserChild(anyString());
+        assertEquals(messageProperty.getProperty("success.newCicle"), messages.getMessage());
+    }
+
+    @Test
+    void mustThrowsChildNotFound_WhenNewCicle() throws Exception {
+        when(userRepository.findByExternalId(anyString())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(NotFoundException.class, () -> taskService.newCicle(getNewCicleRequest()));
+        assertEquals(messageProperty.getProperty("error.notFound", messageProperty.getProperty("task")), exception.getMessage());
+    }
+
+    @Test
+    void mustList() throws Exception {
+        when(taskRepository.findByExternalId(anyString())).thenReturn(Optional.of(getTask()));
+
+        TaskResponse taskResponse = taskService.list(externalId);
+        assertEquals(taskResponse, getTaskResponse());
+    }
+
+    @Test
+    void  mustThrowsTaskNotFound_WhenList() throws Exception {
+        when(taskRepository.findByExternalId(anyString())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(NotFoundException.class, () -> taskService.list(externalId));
+        assertEquals(messageProperty.getProperty("error.notFound", messageProperty.getProperty("task")), exception.getMessage());
+    }
+
     private void setUserChild() {
         when(userRepository.findByExternalId(anyString())).thenReturn(Optional.of(getUser()));
     }
@@ -158,6 +239,33 @@ public class TaskServiceImplTest {
                 .performed(false)
                 .createdDate(LocalDateTime.parse("2023-10-07T15:02:06.903595"))
                 .build();
+    }
+
+    private TaskResponse getTaskUpdateResponse() {
+        return TaskResponse.builder()
+            .externalId(externalId)
+            .name("To do the dishes.")
+            .reward(0.2)
+            .description("Always wash dishes after eating all days")
+            .performed(true)
+            .createdDate(LocalDateTime.parse("2023-10-07T15:02:06.903595"))
+            .build();
+    }
+
+    private TaskUpdateRequest getTaskUpdateRequest() {
+        return TaskUpdateRequest.builder()
+            .name("To do the dishes.")
+            .reward(0.2)
+            .description("Always wash dishes after eating all days")
+            .performed(true)
+            .build();
+    }
+
+    private NewCicleRequest getNewCicleRequest() {
+        return NewCicleRequest.builder()
+            .externalIdUserChild(externalId)
+            .reuseTasks(true)
+            .build();
     }
 
 }
