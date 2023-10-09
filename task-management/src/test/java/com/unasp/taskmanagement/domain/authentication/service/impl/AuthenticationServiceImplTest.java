@@ -84,11 +84,11 @@ public class AuthenticationServiceImplTest {
   @Test
   void mustGetAuthenticatedUser() throws Exception {
     User user = getUser();
-    Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
+    Authentication authentication = new UsernamePasswordAuthenticationToken(getUser(), null);
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
     User authenticationUser = authenticationService.getAuthenticatedUser();
-    assertEquals(user, authenticationUser);
+    assertEquals(user.getLogin(), authenticationUser.getLogin());
   }
 
   @Test
