@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/v1/user")
 @Slf4j
-@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
   @Autowired
   private UserService userService;
@@ -42,7 +41,7 @@ public class UserController {
     Messages message = userService.createSponsor(userSponsorRequest);
     log.info("Finalize user Sponsor registration {}", userSponsorRequest.getEmail());
 
-    return  ResponseEntity.status(HttpStatus.CREATED).body(message);
+    return ResponseEntity.status(HttpStatus.CREATED).body(message);
   }
 
   @PostMapping("/child/new-user")
@@ -57,7 +56,7 @@ public class UserController {
     UserChildResponse user = userService.createChild(userChildRequest);
     log.info("Finalize user Child registration {}", userChildRequest.getNickname());
 
-    return  ResponseEntity.status(HttpStatus.CREATED).body(user);
+    return ResponseEntity.status(HttpStatus.CREATED).body(user);
   }
 
   @GetMapping("/list-child")

@@ -44,10 +44,8 @@ public class TaskControllerTest {
     TaskService taskService;
     @MockBean
     private MessageProperty messageProperty;
-
     @MockBean
     private TokenService tokenService;
-
     @MockBean
     UserRepository userRepository;
 
