@@ -94,7 +94,7 @@ public class TaskServiceImplTest {
     void mustTotalValueTasksPerformedResponse() throws Exception {
         setUserChild();
 
-        when(taskRepository.totalValueTasksPerformed()).thenReturn(0.0);
+        when(taskRepository.totalValueTasksPerformed(externalId)).thenReturn(0.0);
 
         TotalValueTasksPerformedResponse total = taskService.totalValueTasksPerformed(externalId);
         assertEquals(total.getTotalValueTasksPerformed(), 0.0);

@@ -311,14 +311,14 @@
 					}
 				],
 				"url": {
-					"raw": "{{url}}/v1/task/list-all-task/839a06e4-7b12-45d1-b934-4a19fd611818",
+					"raw": "{{url}}/v1/task/list-all/839a06e4-7b12-45d1-b934-4a19fd611818",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"v1",
 						"task",
-						"list-all-task",
+						"list-all",
 						"839a06e4-7b12-45d1-b934-4a19fd611818"
 					]
 				}
@@ -389,7 +389,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Dar ração para o cachorro e gato\",\r\n    \"reward\": 1.00,\r\n    \"description\": \"Colocar um potinho completo as 12h e as 18h\",\r\n    \"performed\": true\r\n}",
+					"raw": "{\r\n    \"name\": \"Arrumar a cama\",\r\n    \"reward\": 1.55,\r\n    \"description\": \"Arrumar logo quando acordar\",\r\n    \"performed\": true\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -397,14 +397,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/v1/task/8cf1b1c8-1c0b-48d9-bed0-0a49972b3f29",
+					"raw": "{{url}}/v1/task/4d97e3ae-659b-4ef1-8ac5-d5df9dd0acd2",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"v1",
 						"task",
-						"8cf1b1c8-1c0b-48d9-bed0-0a49972b3f29"
+						"4d97e3ae-659b-4ef1-8ac5-d5df9dd0acd2"
 					]
 				}
 			},

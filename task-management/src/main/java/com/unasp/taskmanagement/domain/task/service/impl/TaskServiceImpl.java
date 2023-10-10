@@ -64,7 +64,7 @@ public class TaskServiceImpl implements TaskService {
   @Override
   public TotalValueTasksPerformedResponse totalValueTasksPerformed(String externalId) {
     checkIfThereIsChild(externalId);
-    Double total = taskRepository.totalValueTasksPerformed();
+    Double total = taskRepository.totalValueTasksPerformed(externalId);
     total = total == null ? 0.0 : total;
 
     return TotalValueTasksPerformedResponse.builder().build().converter(total);
