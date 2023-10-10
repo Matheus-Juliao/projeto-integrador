@@ -61,6 +61,7 @@ public class TaskServiceImplTest {
 
         TaskResponse taskResponse = taskService.create(getTaskRequest());
         verify(taskRepository, times(1)).save(any());
+        assertEquals(taskResponse.getName(), getTaskResponse().getName());
     }
 
     @Test

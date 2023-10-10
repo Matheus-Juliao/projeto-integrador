@@ -12,6 +12,7 @@ import com.unasp.taskmanagement.domain.user.entity.User;
 import com.unasp.taskmanagement.domain.user.enums.UserRole;
 import com.unasp.taskmanagement.domain.user.repository.UserRepository;
 import com.unasp.taskmanagement.exception.BusinessException;
+import com.unasp.taskmanagement.exception.NotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -126,6 +127,41 @@ public class UserServiceImplTest {
 
     Exception exception = assertThrows(BusinessException.class, () -> userService.updateChild(externalId, userChildUpdateRequest));
     assertEquals(messageProperty.getProperty("error.already.email", messageProperty.getProperty("user")), exception.getMessage());
+  }
+
+  @Test
+  void mustDeleteChild() throws Exception {
+    when(userRepository.findByExternalId(anyString())).thenReturn(Optional.of(getUser()));
+
+    Messages messages = userService.deleteChild(externalId);
+    verify(taskRepository, times(1)).deleteExternalIdUserChild(anyString());
+    verify(userRepository, times(1)).delete(any());
+    assertEquals(messageProperty.getProperty("success.delete", messageProperty.getProperty("user")), messages.getMessage());
+  }
+
+  @Test
+  void mustThrowsUserNotFound_WhenDeleteChild() throws Exception {
+    when(userRepository.findByExternalId(anyString())).thenReturn(Optional.empty());
+
+    Exception exception = assertThrows(NotFoundException.class, () -> userService.deleteChild(externalId));
+    assertEquals(messageProperty.getProperty("error.notFound", messageProperty.getProperty("user")), exception.getMessage());
+  }
+
+  @Test
+  void mustListChild() throws Exception {
+    when(userRepository.findByExternalId(anyString())).thenReturn(Optional.of(getUser()));
+
+    UserChildResponse userChildResponse = userService.listChild(externalId);
+    verify(taskRepository, times(1)).totalTask(anyString());
+    assertEquals(userChildResponse.getName(), getUserChildResponse().getName());
+  }
+
+  @Test
+  void mustThrowsUserNotFound_WhenDListChild() throws Exception {
+    when(userRepository.findByExternalId(anyString())).thenReturn(Optional.empty());
+
+    Exception exception = assertThrows(NotFoundException.class, () -> userService.listChild(externalId));
+    assertEquals(messageProperty.getProperty("error.notFound", messageProperty.getProperty("user")), exception.getMessage());
   }
 
   private User getUser() {
