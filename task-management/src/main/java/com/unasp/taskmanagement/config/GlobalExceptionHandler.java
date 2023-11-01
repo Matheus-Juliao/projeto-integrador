@@ -4,6 +4,7 @@ import com.unasp.taskmanagement.config.component.MessageProperty;
 import com.unasp.taskmanagement.config.dto.ErrorValidationDTO;
 import com.unasp.taskmanagement.config.messages.Messages;
 import com.unasp.taskmanagement.exception.BusinessException;
+import com.unasp.taskmanagement.exception.ForbiddenException;
 import com.unasp.taskmanagement.exception.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,12 +59,13 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler({ BadCredentialsException.class,
-                      InternalAuthenticationServiceException.class })
+                      InternalAuthenticationServiceException.class,
+                      ForbiddenException.class })
   @ResponseStatus(HttpStatus.FORBIDDEN)
   public ResponseEntity<Object> handleForbidden(RuntimeException e) {
     return new ResponseEntity<>(Messages.builder()
         .code(HttpStatus.FORBIDDEN.value())
-        .message(messageProperty.getProperty("error.userOrPasswordInvalid"))
+        .message(e.getMessage())
         .build(), HttpStatus.FORBIDDEN);
   }
 
